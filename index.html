@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      if (location.pathname.replace(/\/+$/, '') === '/admin') document.documentElement.classList.add('admin-route')
+    </script>
+    <title>Tripframe — Your Trip Deserves More Than Selfies</title>
+    <meta
+      name="description"
+      content="Find local photographers wherever you travel. Join the Tripframe early-access list for mobile, professional, drone, and hotel photography."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://tripframe.netlify.app/" />
+    <meta name="theme-color" content="#f4f1ea" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Tripframe" />
+    <meta property="og:title" content="Tripframe — Your Trip Deserves More Than Selfies" />
+    <meta
+      property="og:description"
+      content="Find local photographers wherever you travel. From spontaneous snapshots to professional shoots, capture your best moments effortlessly."
+    />
+    <meta property="og:url" content="https://tripframe.netlify.app/" />
+    <meta property="og:image" content="https://tripframe.netlify.app/images/og.webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A photographer taking a picture of a traveler in Cappadocia" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tripframe — Your Trip Deserves More Than Selfies" />
+    <meta
+      name="twitter:description"
+      content="Find local photographers wherever you travel. Join the Tripframe early-access list."
+    />
+    <meta name="twitter:image" content="https://tripframe.netlify.app/images/og.webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,620&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/images/hero-1800.webp"
+      imagesrcset="/images/hero-900.webp 900w, /images/hero-1800.webp 1800w"
+      imagesizes="(min-width: 1024px) 50vw, 100vw"
+      fetchpriority="high"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "Tripframe",
+            "url": "https://tripframe.netlify.app/",
+            "description": "Early-access marketplace connecting travelers with local photographers."
+          },
+          {
+            "@type": "Organization",
+            "name": "Tripframe",
+            "url": "https://tripframe.netlify.app/",
+            "email": "hello@tripframe.com",
+            "description": "On-demand travel photography, opening city by city."
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"><!--app-html--></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
