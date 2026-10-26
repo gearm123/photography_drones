@@ -12,19 +12,20 @@ if (!template.includes('<!--app-html-->')) {
 
 const { render } = await import(pathToFileURL(serverEntry).href)
 const appHtml = render().replace(/<link rel="preload" as="image"[^>]*>/g, '')
-if (!appHtml.includes('Your Trip Deserves More Than Selfies.')) {
+const visible = appHtml.replaceAll('<!-- -->', '')
+if (!visible.includes('Your Trip Deserves More Than Selfies.')) {
   throw new Error('Prerendered HTML is missing the headline')
 }
-if (!appHtml.includes('Join Our Photographer Network') || !appHtml.includes('App Store') || !appHtml.includes('Google Play')) {
+if (!visible.includes('Join Our Photographer Network') || !visible.includes('App Store') || !visible.includes('Google Play')) {
   throw new Error('Prerendered HTML is missing the photographer form or the app downloads')
 }
-if (!appHtml.includes('Why photographers join Tripframe.') || !appHtml.includes('You keep 80%') || !appHtml.includes('Lisbon')) {
+if (!visible.includes('Why photographers join Tripframe.') || !visible.includes('You keep 80%') || !visible.includes('Lisbon')) {
   throw new Error('Prerendered HTML is missing the photographer program')
 }
-if (!appHtml.includes('Photographer questions.') || !appHtml.includes('hello@tripframe.com')) {
+if (!visible.includes('Photographer questions.') || !visible.includes('hello@tripframe.com')) {
   throw new Error('Prerendered HTML is missing photographer support')
 }
-if (appHtml.includes('Get Early Access') || appHtml.includes('id="travelers"')) {
+if (visible.includes('Get Early Access') || visible.includes('id="travelers"')) {
   throw new Error('Prerendered HTML still includes the traveler signup form')
 }
 
