@@ -3,6 +3,7 @@ import { Header } from './components/Header.tsx'
 import { Hero } from './components/Hero.tsx'
 import { HowItWorks } from './components/HowItWorks.tsx'
 import { LeadForms } from './components/LeadForms.tsx'
+import { PhotographerProgram } from './components/PhotographerProgram.tsx'
 import { Services } from './components/Services.tsx'
 import { WhyChooseUs } from './components/WhyChooseUs.tsx'
 
@@ -13,7 +14,7 @@ export default function App() {
         Skip to content
       </a>
       <p className="bg-ink px-5 py-2 text-center text-sm text-foam">
-        Early access — Tripframe does not book photographers yet. Join the list and we will open your city first.
+        Photographers can apply on this site. Travelers will find a photographer in the Tripframe apps, which are still being built.
       </p>
       <Header />
       <main id="main">
@@ -21,6 +22,7 @@ export default function App() {
         <HowItWorks />
         <Services />
         <WhyChooseUs />
+        <PhotographerProgram />
         <LeadForms />
       </main>
       <Footer />

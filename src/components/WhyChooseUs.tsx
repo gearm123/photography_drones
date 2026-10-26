@@ -38,8 +38,8 @@ export function WhyChooseUs() {
           <Eyebrow>Why choose us</Eyebrow>
           <h2 className="mt-4 text-4xl sm:text-5xl">Travel photography, without the runaround.</h2>
           <p className="mt-5 max-w-xl text-muted">
-            Tripframe is being built for travelers who want a real photograph of the trip, and for
-            local photographers who want work that fits their city.
+            Travelers will request a photographer in the Tripframe apps. Local photographers apply
+            on this website for work that fits their city.
           </p>
           <ul className="mt-10 grid gap-8 sm:grid-cols-2">
             {reasons.map((reason) => (

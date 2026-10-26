@@ -3,18 +3,18 @@ import { Eyebrow, Reveal } from './Reveal.tsx'
 const steps = [
   {
     number: '01',
-    title: 'Choose your destination.',
-    body: 'Tell us the city you are visiting, even if the trip is still a maybe.',
+    title: 'Get the Tripframe app.',
+    body: 'Travelers find a photographer on iPhone or Android. The apps are still being built.',
   },
   {
     number: '02',
-    title: 'Select your photography service.',
-    body: 'Mobile, professional, drone, or a session arranged with your hotel.',
+    title: 'Choose the shoot.',
+    body: 'In the app, pick a destination and mobile, professional, drone, or hotel photography.',
   },
   {
     number: '03',
-    title: 'Connect with a local photographer.',
-    body: 'When Tripframe opens there, we introduce you to a photographer who knows the place.',
+    title: 'Meet a local photographer.',
+    body: 'When booking opens, the introduction happens in the app, not on this website.',
   },
 ]
 
@@ -26,7 +26,7 @@ export function HowItWorks() {
         <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <h2 className="max-w-xl text-4xl sm:text-5xl">Three steps. No scavenger hunt.</h2>
           <p className="max-w-sm text-muted">
-            This is the path from a destination to a local photographer. Early access is open while cities come online.
+            Travelers use the mobile apps. Photographers apply on this website while the apps are still being built.
           </p>
         </div>
         <ol className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">

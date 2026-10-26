@@ -14,10 +14,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
-export async function readJson(req: Request): Promise<
-  { ok: true; body: Record<string, unknown> } | { ok: false; response: Response }
-> {
-  if (req.method !== 'POST') return { ok: false, response: json(405, { error: 'Method not allowed.' }) }
+export async function readJson(
+  req: Request,
+  method: string | string[] = 'POST',
+): Promise<{ ok: true; body: Record<string, unknown> } | { ok: false; response: Response }> {
+  const allowed = Array.isArray(method) ? method : [method]
+  if (!allowed.includes(req.method)) return { ok: false, response: json(405, { error: 'Method not allowed.' }) }
 
   const contentType = req.headers.get('content-type') ?? ''
   if (!contentType.toLowerCase().includes('application/json')) {
@@ -25,7 +27,7 @@ export async function readJson(req: Request): Promise<
   }
 
   const raw = await req.text()
-  if (raw.length > 8000) return { ok: false, response: json(413, { error: 'That submission is too large.' }) }
+  if (raw.length > 12000) return { ok: false, response: json(413, { error: 'That submission is too large.' }) }
 
   try {
     const parsed: unknown = JSON.parse(raw)
@@ -63,4 +65,20 @@ export function saveFailed(scope: string, error: unknown): Response {
   const message = error instanceof Error ? error.message : 'unknown error'
   console.error(`${scope} save failed: ${message}`)
   return json(503, { error: 'We could not save your request right now. Please try again shortly.' })
+}
+
+export function errorText(error: unknown): string {
+  const parts: string[] = []
+  let current: unknown = error
+  for (let depth = 0; depth < 4 && current; depth += 1) {
+    if (typeof current === 'object' && current) {
+      if ('message' in current && typeof current.message === 'string') parts.push(current.message)
+      if ('code' in current) parts.push(String(current.code))
+      current = 'cause' in current ? current.cause : null
+      continue
+    }
+    parts.push(String(current))
+    break
+  }
+  return parts.join(' ')
 }

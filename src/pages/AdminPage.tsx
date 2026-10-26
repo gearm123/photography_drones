@@ -1,5 +1,8 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
-import { serviceOptions, specializationOptions } from '../lib/leadRules.ts'
+import { serviceOptions } from '../lib/leadRules.ts'
+import type { PhotographerRecord } from '../lib/photographerRecord.ts'
+import type { EmailSetup } from '../lib/mailMessages.ts'
+import { PhotographerAdmin } from './PhotographerAdmin.tsx'
 
 type TravelerLead = {
   id: string
@@ -10,19 +13,12 @@ type TravelerLead = {
   createdAt: string
 }
 
-type PhotographerLead = {
-  id: string
-  name: string
-  email: string
-  location: string
-  specialization: string
-  portfolioUrl: string
-  createdAt: string
-}
+type PhotographerLead = PhotographerRecord
 
 type LeadsResponse = {
   travelers: TravelerLead[]
   photographers: PhotographerLead[]
+  email?: EmailSetup
 }
 
 const fieldClass =
@@ -63,7 +59,7 @@ export function AdminPage() {
   useEffect(() => {
     document.documentElement.classList.add('admin-ready')
     const previousTitle = document.title
-    document.title = 'Leads — Tripframe'
+    document.title = 'Admin — Tripframe'
     const meta = document.createElement('meta')
     meta.name = 'robots'
     meta.content = 'noindex, nofollow'
@@ -134,6 +130,17 @@ export function AdminPage() {
     setError('')
   }
 
+  function replacePhotographer(photographer: PhotographerRecord) {
+    setLeads((current) =>
+      current
+        ? {
+            ...current,
+            photographers: current.photographers.map((item) => (item.id === photographer.id ? photographer : item)),
+          }
+        : current,
+    )
+  }
+
   return (
     <div className="min-h-svh bg-paper text-ink">
       <header className="border-b border-line bg-paper/90">
@@ -155,13 +162,13 @@ export function AdminPage() {
       </header>
       <main className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
         <p className="text-xs font-medium tracking-[0.18em] text-clay uppercase">Admin</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl">Early-access leads</h1>
+        <h1 className="mt-3 text-4xl sm:text-5xl">Photographer dashboard</h1>
         <p className="mt-4 max-w-2xl text-muted">
-          Traveler and photographer requests saved from the landing page. This is not a booking list.
+          Sign in with the admin password to review photographer applications. The password stays on the server.
         </p>
         {loading ? <p className="mt-10 text-muted">Loading leads…</p> : null}
         {!loading && !leads ? <LoginForm password={password} setPassword={setPassword} submitting={submitting} error={error} onSubmit={onLogin} /> : null}
-        {leads ? <LeadLists leads={leads} /> : null}
+        {leads ? <LeadLists leads={leads} onUpdated={replacePhotographer} /> : null}
       </main>
     </div>
   )
@@ -206,20 +213,29 @@ function LoginForm({
         className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-6 text-base font-medium text-foam hover:bg-sea disabled:opacity-60"
         disabled={submitting}
       >
-        {submitting ? 'Signing in…' : 'View leads'}
+        {submitting ? 'Signing in…' : 'Sign in'}
       </button>
     </form>
   )
 }
 
-function LeadLists({ leads }: { leads: LeadsResponse }) {
+function LeadLists({
+  leads,
+  onUpdated,
+}: {
+  leads: LeadsResponse
+  onUpdated: (photographer: PhotographerRecord) => void
+}) {
   return (
-    <div className="mt-12 space-y-12">
+    <div className="mt-12 space-y-16">
+      <PhotographerAdmin photographers={leads.photographers} emailSetup={leads.email} onUpdated={onUpdated} />
       <section aria-labelledby="traveler-leads">
         <h2 id="traveler-leads" className="text-3xl">
-          Travelers
+          Earlier traveler requests
         </h2>
-        <p className="mt-2 text-sm text-muted">{leads.travelers.length} saved</p>
+        <p className="mt-2 text-sm text-muted">
+          {leads.travelers.length} saved. New traveler requests are no longer collected on this website.
+        </p>
         <LeadTable
           empty="No traveler leads yet."
           headers={['Name', 'Email', 'Destination', 'Service', 'Submitted']}
@@ -230,32 +246,6 @@ function LeadLists({ leads }: { leads: LeadsResponse }) {
             </a>,
             lead.destination,
             labelFor(lead.serviceTier, serviceOptions),
-            formatWhen(lead.createdAt),
-          ])}
-        />
-      </section>
-      <section aria-labelledby="photographer-leads">
-        <h2 id="photographer-leads" className="text-3xl">
-          Photographers
-        </h2>
-        <p className="mt-2 text-sm text-muted">{leads.photographers.length} saved</p>
-        <LeadTable
-          empty="No photographer leads yet."
-          headers={['Name', 'Email', 'Location', 'Specialization', 'Portfolio', 'Submitted']}
-          rows={leads.photographers.map((lead) => [
-            lead.name,
-            <a key="email" href={`mailto:${lead.email}`} className="underline decoration-line underline-offset-4">
-              {lead.email}
-            </a>,
-            lead.location,
-            labelFor(lead.specialization, specializationOptions),
-            lead.portfolioUrl ? (
-              <a key="portfolio" href={lead.portfolioUrl} className="underline decoration-line underline-offset-4" target="_blank" rel="noreferrer">
-                Open
-              </a>
-            ) : (
-              'None'
-            ),
             formatWhen(lead.createdAt),
           ])}
         />

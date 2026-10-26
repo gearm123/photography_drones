@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 const links = [
   { href: '#how-it-works', label: 'How it works' },
   { href: '#services', label: 'Services' },
-  { href: '#why', label: 'Why Tripframe' },
-  { href: '#photographers', label: 'Photographers' },
+  { href: '#why-join', label: 'For photographers' },
+  { href: '#faq', label: 'FAQ' },
+  { href: '#support', label: 'Support' },
 ]
 
 export function Logo({ tone = 'ink' }: { tone?: 'ink' | 'foam' }) {
@@ -38,22 +39,22 @@ export function Header() {
     <header className="sticky top-0 z-30 border-b border-line/80 bg-paper/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
         <Logo />
-        <nav aria-label="Primary" className="hidden items-center gap-7 md:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex">
           {links.map((link) => (
             <a key={link.href} href={link.href} className="text-sm text-muted hover:text-ink">
               {link.label}
             </a>
           ))}
           <a
-            href="#travelers"
+            href="#photographers"
             className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 text-sm font-medium text-foam hover:bg-sea"
           >
-            Find a Photographer
+            Join as a Photographer
           </a>
         </nav>
         <button
           type="button"
-          className="inline-flex min-h-11 items-center rounded-full border border-line px-4 text-sm font-medium md:hidden"
+          className="inline-flex min-h-11 items-center rounded-full border border-line px-4 text-sm font-medium lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
@@ -62,7 +63,7 @@ export function Header() {
         </button>
       </div>
       {open ? (
-        <nav id="mobile-nav" aria-label="Mobile" className="border-t border-line px-5 py-4 md:hidden">
+        <nav id="mobile-nav" aria-label="Mobile" className="border-t border-line px-5 py-4 lg:hidden">
           <ul className="flex flex-col gap-1">
             {links.map((link) => (
               <li key={link.href}>
@@ -77,11 +78,11 @@ export function Header() {
             ))}
             <li>
               <a
-                href="#travelers"
+                href="#photographers"
                 className="mt-2 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-ink px-4 text-sm font-medium text-foam"
                 onClick={() => setOpen(false)}
               >
-                Find a Photographer
+                Join as a Photographer
               </a>
             </li>
           </ul>

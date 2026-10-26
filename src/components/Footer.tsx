@@ -1,11 +1,15 @@
+import { appsAreLive, supportEmail } from '../content/photographerOffer.ts'
+import { AppDownloads } from './AppDownloads.tsx'
 import { Logo } from './Header.tsx'
 
 const links = [
-  { href: '#how-it-works', label: 'How it works' },
-  { href: '#services', label: 'Services' },
-  { href: '#why', label: 'Why Tripframe' },
-  { href: '#travelers', label: 'Find a photographer' },
-  { href: '#photographers', label: 'Join as a photographer' },
+  { href: '#why-join', label: 'Why join' },
+  { href: '#pay', label: 'Pay and commission' },
+  { href: '#launch', label: 'Launch cities' },
+  { href: '#onboarding', label: 'Onboarding' },
+  { href: '#faq', label: 'FAQ' },
+  { href: '#support', label: 'Support' },
+  { href: '#photographers', label: 'Apply' },
   { href: '/privacy/', label: 'Privacy policy' },
   { href: '/admin', label: 'Leads' },
 ]
@@ -17,8 +21,8 @@ export function Footer() {
         <div>
           <Logo tone="foam" />
           <p className="mt-4 max-w-sm text-sm text-foam/75">
-            Tripframe connects travelers with local photographers. Early access is open. Booking is
-            not live yet.
+            Travelers find a photographer in the Tripframe apps. Photographers apply on this website.
+            Booking is not live yet.
           </p>
         </div>
         <nav aria-label="Footer">
@@ -36,11 +40,24 @@ export function Footer() {
         <div>
           <p className="text-xs font-medium tracking-[0.16em] text-foam/50 uppercase">Contact</p>
           <p className="mt-4 text-sm text-foam/85">
-            <a href="mailto:hello@tripframe.com" className="underline decoration-foam/30 underline-offset-4">
-              hello@tripframe.com
+            <a href={`mailto:${supportEmail}`} className="underline decoration-foam/30 underline-offset-4">
+              {supportEmail}
             </a>
           </p>
-          <p className="mt-3 text-sm text-foam/70">We read every early-access request.</p>
+          <p className="mt-2 text-sm text-foam/70">
+            <a href="#support" className="underline decoration-foam/30 underline-offset-4">
+              Photographer support
+            </a>
+          </p>
+          <p className="mt-6 text-xs font-medium tracking-[0.16em] text-foam/50 uppercase">Get the app</p>
+          <div className="mt-4">
+            <AppDownloads tone="foam" />
+          </div>
+          <p className="mt-3 text-sm text-foam/70">
+            {appsAreLive
+              ? 'Download Tripframe for iPhone or Android.'
+              : 'The iPhone and Android apps are still being built.'}
+          </p>
         </div>
       </div>
       <p className="mx-auto mt-12 max-w-6xl border-t border-white/10 pt-6 text-xs text-foam/50">

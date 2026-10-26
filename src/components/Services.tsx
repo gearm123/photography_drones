@@ -33,6 +33,7 @@ export function Services() {
       <Reveal className="mx-auto max-w-6xl">
         <Eyebrow>Photography services</Eyebrow>
         <h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">A photographer for the kind of trip you are actually on.</h2>
+        <p className="mt-5 max-w-2xl text-muted">These are the shoots travelers will request in the app.</p>
         <ul className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
           {services.map((service) => (
             <li key={service.title}>

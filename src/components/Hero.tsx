@@ -1,3 +1,6 @@
+import { appsAreLive } from '../content/photographerOffer.ts'
+import { AppDownloads } from './AppDownloads.tsx'
+
 export function Hero() {
   return (
     <section className="grid lg:min-h-[calc(100svh-7.5rem)] lg:grid-cols-2">
@@ -12,23 +15,22 @@ export function Hero() {
           Find local photographers wherever you travel. From spontaneous snapshots to professional
           shoots, capture your best moments effortlessly.
         </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a
-            href="#travelers"
-            className="inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-6 text-base font-medium text-foam hover:bg-sea"
-          >
-            Find a Photographer
-          </a>
+        <div className="mt-8">
           <a
             href="#photographers"
-            className="inline-flex min-h-12 items-center justify-center rounded-full border border-ink/15 bg-foam px-6 text-base font-medium text-ink hover:border-ink/40"
+            className="inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-6 text-base font-medium text-foam hover:bg-sea"
           >
             Join as a Photographer
           </a>
         </div>
-        <p className="mt-6 max-w-md text-sm text-muted">
-          Tripframe is not booking sessions yet. Join the list and we will open your city first.
+        <p className="mt-8 max-w-md text-sm text-muted">
+          {appsAreLive
+            ? 'Travelers find a photographer in the Tripframe apps.'
+            : 'Travelers find a photographer in the Tripframe apps. The apps are still being built, so these buttons stay on this page.'}
         </p>
+        <div className="mt-4">
+          <AppDownloads />
+        </div>
       </div>
       <div className="order-1 relative min-h-[46vh] lg:order-2 lg:min-h-full">
         <img

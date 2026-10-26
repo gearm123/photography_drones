@@ -9,6 +9,7 @@
     "db:migrate": "netlify database migrations apply",
     "build": "tsc -b && tsc -p tsconfig.functions.json --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && node scripts/prerender.mjs",
     "lint": "oxlint",
+    "test:mobile-api": "node --experimental-strip-types scripts/check-mobile-api.ts",
     "preview": "vite preview"
   },
   "dependencies": {

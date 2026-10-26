@@ -1,11 +1,11 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import {
+  currencyOptions,
   serviceOptions,
-  specializationOptions,
   validatePhotographer,
-  validateTraveler,
   type FieldErrors,
 } from '../lib/leadRules.ts'
+import { AppDownloads } from './AppDownloads.tsx'
 import { Eyebrow, Reveal } from './Reveal.tsx'
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
@@ -54,13 +54,14 @@ function useLeadSubmit(endpoint: string) {
   const [status, setStatus] = useState<Status>('idle')
   const [formError, setFormError] = useState('')
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [confirmation, setConfirmation] = useState<'' | 'sent' | 'failed'>('')
   const startedAt = useRef(0)
 
   useEffect(() => {
     startedAt.current = Date.now()
   }, [])
 
-  async function send(payload: Record<string, string>, website: string) {
+  async function send(payload: Record<string, unknown>, website: string) {
     setStatus('submitting')
     setFormError('')
     try {
@@ -69,7 +70,11 @@ function useLeadSubmit(endpoint: string) {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ ...payload, hp_field: website, startedAt: startedAt.current }),
       })
-      const data = (await response.json().catch(() => ({}))) as { error?: string; fields?: FieldErrors }
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: string
+        fields?: FieldErrors
+        confirmation?: string
+      }
       if (!response.ok) {
         setFieldErrors(data.fields ?? {})
         setFormError(data.error || 'Something went wrong. Please try again.')
@@ -77,6 +82,7 @@ function useLeadSubmit(endpoint: string) {
         return
       }
       setFieldErrors({})
+      setConfirmation(data.confirmation === 'failed' ? 'failed' : data.confirmation === 'sent' ? 'sent' : '')
       setStatus('success')
     } catch {
       setFormError('We could not reach the server. Check your connection and try again.')
@@ -84,7 +90,7 @@ function useLeadSubmit(endpoint: string) {
     }
   }
 
-  return { status, formError, fieldErrors, setFieldErrors, setFormError, setStatus, send }
+  return { status, formError, fieldErrors, confirmation, setFieldErrors, setFormError, setStatus, send }
 }
 
 export function LeadForms() {
@@ -92,13 +98,17 @@ export function LeadForms() {
     <section className="scroll-mt-24 border-t border-line bg-sand/50 px-5 py-20 sm:px-8 sm:py-28">
       <Reveal className="mx-auto max-w-6xl">
         <Eyebrow>Early access</Eyebrow>
-        <h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Tell us where you are headed.</h2>
+        <h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Photographers apply here.</h2>
         <p className="mt-5 max-w-2xl text-muted">
-          Two short forms. Travelers get first notice when a city opens. Photographers join the
-          network we are building. Nothing here books a shoot today.
+          This website registers photographers only.{' '}
+          <a href="#pay" className="underline decoration-line underline-offset-4 hover:text-ink">
+            Read the pay terms
+          </a>{' '}
+          before you apply. Travelers find a photographer in the Tripframe apps for iPhone and Android.
+          Those apps are still being built.
         </p>
         <div className="mt-12 grid items-start gap-6 lg:grid-cols-2">
-          <TravelerForm />
+          <TravelerApps />
           <PhotographerForm />
         </div>
       </Reveal>
@@ -106,138 +116,17 @@ export function LeadForms() {
   )
 }
 
-function TravelerForm() {
-  const formId = useId()
-  const lead = useLeadSubmit('/api/traveler-leads')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [destination, setDestination] = useState('')
-  const [service, setService] = useState('')
-  const formRef = useRef<HTMLFormElement>(null)
-
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const result = validateTraveler({ name, email, destination, service })
-    if (!result.ok) {
-      lead.setFieldErrors(result.fields)
-      lead.setFormError('Check the highlighted fields.')
-      lead.setStatus('error')
-      return
-    }
-    lead.setFieldErrors({})
-    lead.setFormError('')
-    const website = formRef.current?.querySelector<HTMLInputElement>('input[name="hp_field"]')?.value ?? ''
-    void lead.send(
-      {
-        name: result.value.name,
-        email: result.value.email,
-        destination: result.value.destination,
-        service: result.value.service,
-      },
-      website,
-    )
-  }
-
+function TravelerApps() {
   return (
-    <article id="travelers" className="scroll-mt-28 rounded-[1.8rem] bg-foam p-6 shadow-[0_24px_50px_-36px_rgba(26,24,20,0.65)] sm:p-8">
-      <h3 id="traveler-heading" className="text-3xl">
-        For travelers
-      </h3>
+    <article id="apps" className="scroll-mt-28 rounded-[1.8rem] bg-foam p-6 shadow-[0_24px_50px_-36px_rgba(26,24,20,0.65)] sm:p-8">
+      <h3 className="text-3xl">For travelers</h3>
       <p className="mt-3 text-sm text-muted">
-        Share a destination and the kind of photos you want. We will email you when a photographer
-        can take them.
+        Find a photographer in the Tripframe app. There is no traveler sign-up on this website. The
+        iPhone and Android apps are still being built, so the buttons below do not open a store.
       </p>
-      {lead.status === 'success' ? (
-        <div role="status" className="mt-8 rounded-2xl bg-sand px-5 py-6">
-          <p className="font-display text-2xl">You are on the list.</p>
-          <p className="mt-2 text-sm text-muted">
-            Thanks, {name.trim()}. We saved your request for {destination.trim()}. This is early
-            access, not a confirmed booking.
-          </p>
-        </div>
-      ) : (
-        <form ref={formRef} className="relative mt-8 space-y-5" onSubmit={onSubmit} noValidate>
-          <Honeypot formId={formId} />
-          <Field id={`${formId}-name`} label="Name" error={lead.fieldErrors.name}>
-            <input
-              id={`${formId}-name`}
-              name="name"
-              autoComplete="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.name)}
-              aria-describedby={lead.fieldErrors.name ? `${formId}-name-error` : undefined}
-              required
-            />
-          </Field>
-          <Field id={`${formId}-email`} label="Email" error={lead.fieldErrors.email}>
-            <input
-              id={`${formId}-email`}
-              name="email"
-              type="email"
-              autoComplete="email"
-              inputMode="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.email)}
-              aria-describedby={lead.fieldErrors.email ? `${formId}-email-error` : undefined}
-              required
-            />
-          </Field>
-          <Field id={`${formId}-destination`} label="Destination" error={lead.fieldErrors.destination}>
-            <input
-              id={`${formId}-destination`}
-              name="destination"
-              autoComplete="off"
-              placeholder="Lisbon, Kyoto, Mexico City"
-              value={destination}
-              onChange={(event) => setDestination(event.target.value)}
-              className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.destination)}
-              aria-describedby={lead.fieldErrors.destination ? `${formId}-destination-error` : undefined}
-              required
-            />
-          </Field>
-          <Field id={`${formId}-service`} label="Photography service" error={lead.fieldErrors.service}>
-            <select
-              id={`${formId}-service`}
-              name="service"
-              value={service}
-              onChange={(event) => setService(event.target.value)}
-              className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.service)}
-              aria-describedby={lead.fieldErrors.service ? `${formId}-service-error` : undefined}
-              required
-            >
-              <option value="">Select a service</option>
-              {serviceOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </Field>
-          {lead.formError ? (
-            <p role="alert" className="text-sm text-clay">
-              {lead.formError}
-            </p>
-          ) : null}
-          <button
-            type="submit"
-            className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-sea px-6 text-base font-medium text-foam hover:bg-sea-deep disabled:opacity-60 sm:w-auto"
-            disabled={lead.status === 'submitting'}
-          >
-            {lead.status === 'submitting' ? 'Sending…' : 'Get Early Access'}
-          </button>
-          <noscript>
-            <p className="text-sm text-muted">
-              JavaScript is required to send this form. Email hello@tripframe.com instead.
-            </p>
-          </noscript>
-        </form>
-      )}
+      <div className="mt-8">
+        <AppDownloads />
+      </div>
     </article>
   )
 }
@@ -247,14 +136,42 @@ function PhotographerForm() {
   const lead = useLeadSubmit('/api/photographer-leads')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
-  const [specialization, setSpecialization] = useState('')
+  const [equipment, setEquipment] = useState('')
+  const [experience, setExperience] = useState('')
+  const [availability, setAvailability] = useState('')
+  const [workingAreas, setWorkingAreas] = useState('')
+  const [hourlyRate, setHourlyRate] = useState('')
+  const [currency, setCurrency] = useState('USD')
+  const [specialties, setSpecialties] = useState<string[]>([])
   const [portfolio, setPortfolio] = useState('')
+  const [portfolio2, setPortfolio2] = useState('')
+  const [portfolio3, setPortfolio3] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
+
+  function toggleSpecialty(value: string) {
+    setSpecialties((current) =>
+      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+    )
+  }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const result = validatePhotographer({ name, email, location, specialization, portfolio })
+    const result = validatePhotographer({
+      name,
+      email,
+      phone,
+      location,
+      equipment,
+      experience,
+      availability,
+      workingAreas,
+      hourlyRate,
+      currency,
+      specialties,
+      portfolios: [portfolio, portfolio2, portfolio3],
+    })
     if (!result.ok) {
       lead.setFieldErrors(result.fields)
       lead.setFormError('Check the highlighted fields.')
@@ -268,35 +185,46 @@ function PhotographerForm() {
       {
         name: result.value.name,
         email: result.value.email,
+        phone: result.value.phone,
         location: result.value.location,
-        specialization: result.value.specialization,
-        portfolio: result.value.portfolioUrl ?? '',
+        equipment: result.value.equipment,
+        experience: result.value.experience,
+        availability: result.value.availability,
+        workingAreas: result.value.workingAreas,
+        hourlyRate: (result.value.hourlyRateCents / 100).toFixed(2),
+        currency: result.value.currency,
+        specialties: result.value.specialties,
+        portfolios: result.value.portfolioUrls,
       },
       website,
     )
   }
 
   const quiet = 'text-foam/75'
+  const errorTone = 'text-[#f6cfc2]'
 
   return (
     <article id="photographers" className="scroll-mt-28 rounded-[1.8rem] bg-ink p-6 text-foam sm:p-8">
       <h3 className="text-3xl">For photographers</h3>
       <p className={`mt-3 text-sm ${quiet}`}>
-        Tell us where you shoot and what you do best. We will email you when the network opens in
-        your city.
+        Apply with your equipment, rates, and working areas. We save every application as pending
+        and email you after review. This does not book a shoot today.
       </p>
       {lead.status === 'success' ? (
         <div role="status" className="mt-8 rounded-2xl bg-white/10 px-5 py-6">
-          <p className="font-display text-2xl">Welcome to the network.</p>
+          <p className="font-display text-2xl">Application received.</p>
           <p className={`mt-2 text-sm ${quiet}`}>
-            Thanks, {name.trim()}. We saved your registration for {location.trim()}. We will be in
-            touch about photographer early access.
+            {lead.confirmation === 'failed'
+              ? `Thanks, ${name.trim()}. Your application for ${location.trim()} is saved as Pending. The confirmation email could not be sent, and it can be retried from the admin dashboard.`
+              : lead.confirmation === 'sent'
+                ? `Thanks, ${name.trim()}. Your application for ${location.trim()} is saved as Pending. We emailed you a confirmation and will email you again after review.`
+                : `Thanks, ${name.trim()}. Your application for ${location.trim()} is saved as Pending. We will email you a confirmation and again after review.`}
           </p>
         </div>
       ) : (
         <form ref={formRef} className="relative mt-8 space-y-5" onSubmit={onSubmit} noValidate>
           <Honeypot formId={formId} />
-          <Field id={`${formId}-name`} label="Name" error={lead.fieldErrors.name} errorClassName="text-[#f6cfc2]">
+          <Field id={`${formId}-name`} label="Name" error={lead.fieldErrors.name} errorClassName={errorTone}>
             <input
               id={`${formId}-name`}
               name="name"
@@ -309,7 +237,7 @@ function PhotographerForm() {
               required
             />
           </Field>
-          <Field id={`${formId}-email`} label="Email" error={lead.fieldErrors.email} errorClassName="text-[#f6cfc2]">
+          <Field id={`${formId}-email`} label="Email" error={lead.fieldErrors.email} errorClassName={errorTone}>
             <input
               id={`${formId}-email`}
               name="email"
@@ -324,7 +252,28 @@ function PhotographerForm() {
               required
             />
           </Field>
-          <Field id={`${formId}-location`} label="Location" error={lead.fieldErrors.location} errorClassName="text-[#f6cfc2]">
+          <Field
+            id={`${formId}-phone`}
+            label="Phone / WhatsApp"
+            error={lead.fieldErrors.phone}
+            errorClassName={errorTone}
+          >
+            <input
+              id={`${formId}-phone`}
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder="+351 912 345 678"
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+              className={fieldClass}
+              aria-invalid={Boolean(lead.fieldErrors.phone)}
+              aria-describedby={lead.fieldErrors.phone ? `${formId}-phone-error` : undefined}
+              required
+            />
+          </Field>
+          <Field id={`${formId}-location`} label="Location" error={lead.fieldErrors.location} errorClassName={errorTone}>
             <input
               id={`${formId}-location`}
               name="location"
@@ -339,36 +288,156 @@ function PhotographerForm() {
             />
           </Field>
           <Field
-            id={`${formId}-specialization`}
-            label="Photography specialization"
-            error={lead.fieldErrors.specialization}
-            errorClassName="text-[#f6cfc2]"
+            id={`${formId}-working-areas`}
+            label="Working areas"
+            error={lead.fieldErrors.workingAreas}
+            errorClassName={errorTone}
           >
-            <select
-              id={`${formId}-specialization`}
-              name="specialization"
-              value={specialization}
-              onChange={(event) => setSpecialization(event.target.value)}
+            <input
+              id={`${formId}-working-areas`}
+              name="workingAreas"
+              placeholder="Lisbon, Cascais, Sintra"
+              value={workingAreas}
+              onChange={(event) => setWorkingAreas(event.target.value)}
               className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.specialization)}
-              aria-describedby={
-                lead.fieldErrors.specialization ? `${formId}-specialization-error` : undefined
-              }
+              aria-invalid={Boolean(lead.fieldErrors.workingAreas)}
+              aria-describedby={lead.fieldErrors.workingAreas ? `${formId}-working-areas-error` : undefined}
               required
-            >
-              <option value="">Select a specialization</option>
-              {specializationOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            />
           </Field>
           <Field
+            id={`${formId}-equipment`}
+            label="Equipment"
+            error={lead.fieldErrors.equipment}
+            errorClassName={errorTone}
+          >
+            <textarea
+              id={`${formId}-equipment`}
+              name="equipment"
+              rows={3}
+              placeholder="Camera bodies, lenses, drone"
+              value={equipment}
+              onChange={(event) => setEquipment(event.target.value)}
+              className={`${fieldClass} min-h-24 resize-y`}
+              aria-invalid={Boolean(lead.fieldErrors.equipment)}
+              aria-describedby={lead.fieldErrors.equipment ? `${formId}-equipment-error` : undefined}
+              required
+            />
+          </Field>
+          <Field
+            id={`${formId}-experience`}
+            label="Experience"
+            error={lead.fieldErrors.experience}
+            errorClassName={errorTone}
+          >
+            <textarea
+              id={`${formId}-experience`}
+              name="experience"
+              rows={3}
+              placeholder="8 years, mostly travel and portraits"
+              value={experience}
+              onChange={(event) => setExperience(event.target.value)}
+              className={`${fieldClass} min-h-24 resize-y`}
+              aria-invalid={Boolean(lead.fieldErrors.experience)}
+              aria-describedby={lead.fieldErrors.experience ? `${formId}-experience-error` : undefined}
+              required
+            />
+          </Field>
+          <Field
+            id={`${formId}-availability`}
+            label="Availability"
+            error={lead.fieldErrors.availability}
+            errorClassName={errorTone}
+          >
+            <input
+              id={`${formId}-availability`}
+              name="availability"
+              placeholder="Weekends and weekday evenings"
+              value={availability}
+              onChange={(event) => setAvailability(event.target.value)}
+              className={fieldClass}
+              aria-invalid={Boolean(lead.fieldErrors.availability)}
+              aria-describedby={lead.fieldErrors.availability ? `${formId}-availability-error` : undefined}
+              required
+            />
+          </Field>
+          <fieldset
+            aria-describedby={lead.fieldErrors.specialties ? `${formId}-specialties-error` : undefined}
+          >
+            <legend className="text-sm font-medium">Photography specialties</legend>
+            <div className="mt-2 grid gap-2 sm:grid-cols-2">
+              {serviceOptions.map((option) => (
+                <label
+                  key={option.value}
+                  className="flex min-h-12 items-center gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm"
+                >
+                  <input
+                    type="checkbox"
+                    name="specialties"
+                    value={option.value}
+                    checked={specialties.includes(option.value)}
+                    onChange={() => toggleSpecialty(option.value)}
+                    className="size-4 accent-sea"
+                  />
+                  {option.label}
+                </label>
+              ))}
+            </div>
+            {lead.fieldErrors.specialties ? (
+              <p id={`${formId}-specialties-error`} className={`mt-2 text-sm ${errorTone}`}>
+                {lead.fieldErrors.specialties}
+              </p>
+            ) : null}
+          </fieldset>
+          <div className="grid gap-5 sm:grid-cols-[1fr_8rem]">
+            <Field
+              id={`${formId}-rate`}
+              label="Proposed hourly rate"
+              error={lead.fieldErrors.hourlyRate}
+              errorClassName={errorTone}
+            >
+              <input
+                id={`${formId}-rate`}
+                name="hourlyRate"
+                inputMode="decimal"
+                placeholder="75"
+                value={hourlyRate}
+                onChange={(event) => setHourlyRate(event.target.value)}
+                className={fieldClass}
+                aria-invalid={Boolean(lead.fieldErrors.hourlyRate)}
+                aria-describedby={lead.fieldErrors.hourlyRate ? `${formId}-rate-error` : undefined}
+                required
+              />
+            </Field>
+            <Field
+              id={`${formId}-currency`}
+              label="Currency"
+              error={lead.fieldErrors.currency}
+              errorClassName={errorTone}
+            >
+              <select
+                id={`${formId}-currency`}
+                name="currency"
+                value={currency}
+                onChange={(event) => setCurrency(event.target.value)}
+                className={fieldClass}
+                aria-invalid={Boolean(lead.fieldErrors.currency)}
+                aria-describedby={lead.fieldErrors.currency ? `${formId}-currency-error` : undefined}
+                required
+              >
+                {currencyOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+          <Field
             id={`${formId}-portfolio`}
-            label="Portfolio or Instagram link (optional)"
+            label="Portfolio sample or link"
             error={lead.fieldErrors.portfolio}
-            errorClassName="text-[#f6cfc2]"
+            errorClassName={errorTone}
           >
             <input
               id={`${formId}-portfolio`}
@@ -382,6 +451,45 @@ function PhotographerForm() {
               className={fieldClass}
               aria-invalid={Boolean(lead.fieldErrors.portfolio)}
               aria-describedby={lead.fieldErrors.portfolio ? `${formId}-portfolio-error` : undefined}
+              required
+            />
+          </Field>
+          <Field
+            id={`${formId}-portfolio-2`}
+            label="Another sample or link (optional)"
+            error={lead.fieldErrors.portfolio2}
+            errorClassName={errorTone}
+          >
+            <input
+              id={`${formId}-portfolio-2`}
+              name="portfolio2"
+              type="text"
+              inputMode="url"
+              placeholder="https:// or @handle"
+              value={portfolio2}
+              onChange={(event) => setPortfolio2(event.target.value)}
+              className={fieldClass}
+              aria-invalid={Boolean(lead.fieldErrors.portfolio2)}
+              aria-describedby={lead.fieldErrors.portfolio2 ? `${formId}-portfolio-2-error` : undefined}
+            />
+          </Field>
+          <Field
+            id={`${formId}-portfolio-3`}
+            label="Another sample or link (optional)"
+            error={lead.fieldErrors.portfolio3}
+            errorClassName={errorTone}
+          >
+            <input
+              id={`${formId}-portfolio-3`}
+              name="portfolio3"
+              type="text"
+              inputMode="url"
+              placeholder="https:// or @handle"
+              value={portfolio3}
+              onChange={(event) => setPortfolio3(event.target.value)}
+              className={fieldClass}
+              aria-invalid={Boolean(lead.fieldErrors.portfolio3)}
+              aria-describedby={lead.fieldErrors.portfolio3 ? `${formId}-portfolio-3-error` : undefined}
             />
           </Field>
           {lead.formError ? (
