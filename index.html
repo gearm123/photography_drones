@@ -6,38 +6,40 @@
     <script>
       if (location.pathname.replace(/\/+$/, '') === '/admin') document.documentElement.classList.add('admin-route')
     </script>
+    <!--seo:start-->
     <title>Tripframe — Your Trip Deserves More Than Selfies</title>
-    <meta
-      name="description"
-      content="Photographers apply to Tripframe on the web. Travelers find a local photographer in the iPhone and Android apps."
-    />
-    <meta name="robots" content="index, follow" />
+    <meta name="description" content="Photographers apply to Tripframe on the web. Travelers find a local photographer in the iPhone and Android apps." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="https://tripframe.netlify.app/" />
-    <meta name="theme-color" content="#f4f1ea" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang="en" href="https://tripframe.netlify.app/" />
+    <link rel="alternate" hreflang="he" href="https://tripframe.netlify.app/he/" />
+    <link rel="alternate" hreflang="fr" href="https://tripframe.netlify.app/fr/" />
+    <link rel="alternate" hreflang="ru" href="https://tripframe.netlify.app/ru/" />
+    <link rel="alternate" hreflang="x-default" href="https://tripframe.netlify.app/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Tripframe" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="he_IL" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    <meta property="og:locale:alternate" content="ru_RU" />
     <meta property="og:title" content="Tripframe — Your Trip Deserves More Than Selfies" />
-    <meta
-      property="og:description"
-      content="Find local photographers wherever you travel. From spontaneous snapshots to professional shoots, capture your best moments effortlessly."
-    />
+    <meta property="og:description" content="Photographers apply to Tripframe on the web. Travelers find a local photographer in the iPhone and Android apps." />
     <meta property="og:url" content="https://tripframe.netlify.app/" />
     <meta property="og:image" content="https://tripframe.netlify.app/images/og.webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="A photographer taking a picture of a traveler in Cappadocia" />
+    <meta property="og:image:alt" content="A photographer taking a picture of a traveler in Cappadocia, with hot air balloons overhead" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Tripframe — Your Trip Deserves More Than Selfies" />
-    <meta
-      name="twitter:description"
-      content="Photographers apply on the Tripframe website. Travelers find a photographer in the mobile apps."
-    />
+    <meta name="twitter:description" content="Photographers apply to Tripframe on the web. Travelers find a local photographer in the iPhone and Android apps." />
     <meta name="twitter:image" content="https://tripframe.netlify.app/images/og.webp" />
+    <!--seo:end-->
+    <meta name="theme-color" content="#f4f1ea" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,620&family=Outfit:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,620&family=Heebo:wght@400;500;600&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link
@@ -48,26 +50,6 @@
       imagesizes="(min-width: 1024px) 50vw, 100vw"
       fetchpriority="high"
     />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebSite",
-            "name": "Tripframe",
-            "url": "https://tripframe.netlify.app/",
-            "description": "Photographers apply on the website. Travelers find a local photographer in the Tripframe mobile apps."
-          },
-          {
-            "@type": "Organization",
-            "name": "Tripframe",
-            "url": "https://tripframe.netlify.app/",
-            "email": "hello@tripframe.com",
-            "description": "On-demand travel photography, opening city by city."
-          }
-        ]
-      }
-    </script>
   </head>
   <body>
     <div id="root"><!--app-html--></div>

@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react'
-
-const links = [
-  { href: '#how-it-works', label: 'How it works' },
-  { href: '#services', label: 'Services' },
-  { href: '#why-join', label: 'For photographers' },
-  { href: '#faq', label: 'FAQ' },
-  { href: '#support', label: 'Support' },
-]
+import { useLanguage } from '../i18n/LanguageContext.tsx'
 
 export function Logo({ tone = 'ink' }: { tone?: 'ink' | 'foam' }) {
   const color = tone === 'foam' ? '#fffcf8' : '#1a1814'
@@ -24,7 +17,15 @@ export function Logo({ tone = 'ink' }: { tone?: 'ink' | 'foam' }) {
 }
 
 export function Header() {
+  const { t } = useLanguage()
   const [open, setOpen] = useState(false)
+  const links = [
+    { href: '#how-it-works', label: t.header.how },
+    { href: '#services', label: t.header.services },
+    { href: '#why-join', label: t.header.photographers },
+    { href: '#faq', label: t.header.faq },
+    { href: '#support', label: t.header.support },
+  ]
 
   useEffect(() => {
     if (!open) return
@@ -37,9 +38,9 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-line/80 bg-paper/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+      <div className="header-safe mx-auto flex max-w-6xl items-center justify-between gap-4 py-3.5">
         <Logo />
-        <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex">
+        <nav aria-label={t.header.nav} className="hidden items-center gap-7 lg:flex">
           {links.map((link) => (
             <a key={link.href} href={link.href} className="text-sm text-muted hover:text-ink">
               {link.label}
@@ -49,7 +50,7 @@ export function Header() {
             href="#photographers"
             className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 text-sm font-medium text-foam hover:bg-sea"
           >
-            Join as a Photographer
+            {t.header.join}
           </a>
         </nav>
         <button
@@ -59,11 +60,11 @@ export function Header() {
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
         >
-          {open ? 'Close' : 'Menu'}
+          {open ? t.header.close : t.header.menu}
         </button>
       </div>
       {open ? (
-        <nav id="mobile-nav" aria-label="Mobile" className="border-t border-line px-5 py-4 lg:hidden">
+        <nav id="mobile-nav" aria-label={t.header.mobile} className="border-t border-line px-5 py-4 lg:hidden">
           <ul className="flex flex-col gap-1">
             {links.map((link) => (
               <li key={link.href}>
@@ -82,7 +83,7 @@ export function Header() {
                 className="mt-2 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-ink px-4 text-sm font-medium text-foam"
                 onClick={() => setOpen(false)}
               >
-                Join as a Photographer
+                {t.header.join}
               </a>
             </li>
           </ul>

@@ -77,6 +77,7 @@ Without `ADMIN_PASSWORD`, the public form can still save applications, but `/adm
 
 After the site has a real domain, replace `https://tripframe.netlify.app` in:
 
+- `src/seo/site.ts` (this origin is copied into each language page during the build)
 - `index.html`
 - `public/sitemap.xml`
 - `public/robots.txt`
