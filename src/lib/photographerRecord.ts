@@ -1,5 +1,3 @@
-import type { EmailDelivery } from './mailMessages.ts'
-
 export type PhotographerRecord = {
   id: string
   name: string
@@ -16,7 +14,6 @@ export type PhotographerRecord = {
   portfolioUrls: string[]
   status: string
   createdAt: string
-  emails: EmailDelivery[]
 }
 
 type LeadRow = Record<string, unknown>
@@ -63,6 +60,5 @@ export function mapPhotographer(row: LeadRow): PhotographerRecord {
     portfolioUrls: portfolioUrls.length > 0 ? portfolioUrls : portfolioUrl ? [portfolioUrl] : [],
     status: text(row.status) || 'pending',
     createdAt: text(row.created_at),
-    emails: [],
   }
 }

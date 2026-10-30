@@ -145,8 +145,8 @@ export const en = {
         body: 'Send your WhatsApp number, equipment, experience, availability, working areas, hourly rate, specialties, and at least one portfolio link.',
       },
       {
-        title: 'Wait for the review email',
-        body: 'We email a confirmation when the application is saved as pending, then another message when it is approved or not.',
+        title: 'Wait for review',
+        body: 'The application stays pending until Tripframe reviews it. We write to the email on the application if we need to reach you.',
       },
       {
         title: 'Your public profile is prepared',
@@ -218,14 +218,9 @@ export const en = {
       'Find a photographer in the Tripframe app. There is no traveler sign-up on this website. The iPhone and Android apps are still being built, so the buttons below do not open a store.',
     formTitle: 'For photographers',
     formBody:
-      'Apply with your equipment, rates, and working areas. We save every application as pending and email you after review. This does not book a shoot today.',
+      'Apply with your equipment, rates, and working areas. Every application is saved as pending. This does not book a shoot today.',
     received: 'Application received.',
-    successSent:
-      'Thanks, {name}. Your application for {location} is saved as Pending. We emailed you a confirmation and will email you again after review.',
-    successFailed:
-      'Thanks, {name}. Your application for {location} is saved as Pending. The confirmation email could not be sent, and it can be retried from the admin dashboard.',
-    successUnknown:
-      'Thanks, {name}. Your application for {location} is saved as Pending. We will email you a confirmation and again after review.',
+    success: 'Thanks, {name}. Your application for {location} is saved as Pending.',
     name: 'Name',
     email: 'Email',
     phone: 'Phone / WhatsApp',

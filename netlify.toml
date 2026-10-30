@@ -61,3 +61,8 @@
   for = "/api/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/forms.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

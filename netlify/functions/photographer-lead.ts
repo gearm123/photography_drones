@@ -1,7 +1,7 @@
 import type { Config } from '@netlify/functions'
-import { deliverEmails } from '../../src/lib/mailDelivery.ts'
-import { mailConfigFrom } from '../../src/lib/mailMessages.ts'
 import { readPhotographerBody, type FieldErrors } from '../../src/lib/leadRules.ts'
+import { submitPhotographerForm } from '../../src/lib/netlifyForm.ts'
+import { mapPhotographer } from '../../src/lib/photographerRecord.ts'
 import { checkSpam, database, errorText, json, readJson, saveFailed } from './leadHttp.ts'
 
 type ExistingRow = { email: string; phone: string | null }
@@ -78,21 +78,24 @@ export default async function handler(req: Request): Promise<Response> {
         hourly_rate_cents, currency, specialties, specialization, portfolio_urls, portfolio_url, status, created_at
     `
     const row = asRows(inserted)[0]
-    let confirmation: 'sent' | 'failed' = 'failed'
     if (row) {
       try {
-        const emails = await deliverEmails(row, ['confirmation', 'admin_notice'], mailConfigFrom(process.env))
-        confirmation = emails.find((email) => email.kind === 'confirmation')?.status === 'sent' ? 'sent' : 'failed'
+        const notice = await submitPhotographerForm(mapPhotographer(row), siteOrigin())
+        if (!notice.ok) console.error(`photographer form notice failed: ${notice.error}`)
       } catch (error) {
-        console.error(`photographer email failed: ${error instanceof Error ? error.message : 'unknown error'}`)
+        console.error(`photographer form notice failed: ${error instanceof Error ? error.message : 'unknown error'}`)
       }
     }
-    return json(200, { ok: true, status: 'pending', confirmation })
+    return json(200, { ok: true, status: 'pending' })
   } catch (error) {
     const duplicate = duplicateFromError(error)
     if (duplicate) return json(409, { error: 'This photographer is already registered.', fields: duplicate })
     return saveFailed('photographer lead', error)
   }
+}
+
+function siteOrigin(): string {
+  return process.env.DEPLOY_PRIME_URL || process.env.URL || 'https://tripframe.netlify.app'
 }
 
 function asRows(rows: LeadRow[] | LeadRow): LeadRow[] {

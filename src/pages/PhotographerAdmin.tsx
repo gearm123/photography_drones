@@ -1,7 +1,6 @@
 import { useMemo, useState, type FormEvent, type ReactNode } from 'react'
 import { currencyOptions, serviceOptions, specializationOptions, validatePhotographer, type FieldErrors } from '../lib/leadRules.ts'
 import type { PhotographerRecord } from '../lib/photographerRecord.ts'
-import { emailKindLabel, emailNeedsAttention, type EmailSetup } from '../lib/mailMessages.ts'
 import { isPhotographerStatus, profileFilters, reviewFilters, statusLabel, type PhotographerStatus, type ProfileAction } from '../lib/photographerStatus.ts'
 
 type Filter = 'all' | PhotographerStatus
@@ -78,11 +77,9 @@ async function readError(response: Response) {
 
 export function PhotographerAdmin({
   photographers,
-  emailSetup,
   onUpdated,
 }: {
   photographers: PhotographerRecord[]
-  emailSetup?: EmailSetup
   onUpdated: (photographer: PhotographerRecord) => void
 }) {
   const [filter, setFilter] = useState<Filter>('pending')
@@ -108,7 +105,11 @@ export function PhotographerAdmin({
         Open an application to see the full profile and portfolio. Pending applications can be approved or rejected.
         Approved photographers can be edited, suspended, or deactivated.
       </p>
-      {emailSetup ? <EmailSetupNote setup={emailSetup} /> : null}
+      <p className="mt-3 max-w-2xl text-sm text-muted">
+        Netlify emails an application when you press Email this application, and again when someone new applies. Add an
+        email notification for the form photographer-application. The reply address is the photographer. Approving or
+        rejecting does not send another email.
+      </p>
       <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter applications">
         {filters.map((item) => {
           const count = item.value === 'all' ? photographers.length : photographers.filter((lead) => lead.status === item.value).length
@@ -171,12 +172,14 @@ function PhotographerDetail({
   const [editing, setEditing] = useState(false)
   const [busy, setBusy] = useState('')
   const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
   const [serverFields, setServerFields] = useState<FieldErrors>({})
   const whatsapp = lead.phone.replace(/[^\d]/g, '')
 
   async function patch(body: Record<string, unknown>, action: string) {
     setBusy(action)
     setError('')
+    setNotice('')
     setServerFields({})
     try {
       const response = await fetch(`/api/admin/photographers/${lead.id}`, {
@@ -200,6 +203,9 @@ function PhotographerDetail({
         return
       }
       onUpdated(photographer)
+      if (action === 'notify') {
+        setNotice('Submitted to Netlify Forms. It is emailed to the address you set for photographer-application.')
+      }
       setEditing(false)
     } catch {
       setError('The leads service is unavailable.')
@@ -289,7 +295,7 @@ function PhotographerDetail({
         </Detail>
         <Detail label="Submitted">{formatWhen(lead.createdAt)}</Detail>
       </dl>
-      <EmailDeliveries lead={lead} />
+      {notice ? <p className="mt-5 text-sm text-muted">{notice}</p> : null}
       {error ? (
         <p role="alert" className="mt-5 text-sm text-clay">
           {error}
@@ -304,16 +310,14 @@ function PhotographerDetail({
         >
           Edit profile
         </button>
-        {emailNeedsAttention(lead.status, lead.emails ?? []) ? (
-          <button
-            type="button"
-            className="inline-flex min-h-11 items-center rounded-full border border-line px-4 text-sm font-medium hover:border-ink/30 disabled:opacity-60"
-            disabled={Boolean(busy)}
-            onClick={() => void patch({ action: 'retry-emails' }, 'retry-emails')}
-          >
-            {busy === 'retry-emails' ? 'Sending…' : 'Retry email'}
-          </button>
-        ) : null}
+        <button
+          type="button"
+          className="inline-flex min-h-11 items-center rounded-full border border-line px-4 text-sm font-medium hover:border-ink/30 disabled:opacity-60"
+          disabled={Boolean(busy)}
+          onClick={() => void patch({ action: 'notify' }, 'notify')}
+        >
+          {busy === 'notify' ? 'Sending…' : 'Email this application'}
+        </button>
         {actionsFor(lead.status).map((item) => (
           <button
             key={item.action}
@@ -492,54 +496,6 @@ function EditForm({
       </div>
     </form>
   )
-}
-
-function EmailSetupNote({ setup }: { setup: EmailSetup }) {
-  const quiet = setup.domainStatus === 'verified'
-  return (
-    <div className={`mt-5 rounded-2xl border px-4 py-3 text-sm ${quiet ? 'border-line text-muted' : 'border-clay/40 bg-sand/60 text-ink'}`}>
-      <p>{setup.detail}</p>
-      {setup.records.length > 0 ? (
-        <ul className="mt-3 space-y-2">
-          {setup.records.map((record) => (
-            <li key={`${record.record}-${record.name}`} className="break-all">
-              <span className="font-medium">{record.record}</span> {record.type} {record.name} — {record.value}
-              {record.status ? ` (${record.status})` : ''}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </div>
-  )
-}
-
-function EmailDeliveries({ lead }: { lead: PhotographerRecord }) {
-  const emails = lead.emails ?? []
-  return (
-    <div className="mt-5">
-      <h4 className="text-xs font-medium tracking-[0.12em] text-muted uppercase">Email</h4>
-      {emails.length === 0 ? (
-        <p className="mt-2 text-sm text-muted">No messages recorded yet.</p>
-      ) : (
-        <ul className="mt-2 space-y-2 text-sm">
-          {emails.map((email) => (
-            <li key={email.kind}>
-              <span className="font-medium">{emailKindLabel(email.kind)}</span>
-              <span className="text-muted"> to {email.recipient || 'unknown'} · {deliveryLabel(email.status)}</span>
-              {email.lastError ? <span className="mt-1 block text-clay">{email.lastError}</span> : null}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  )
-}
-
-function deliveryLabel(status: string): string {
-  if (status === 'sent') return 'Sent'
-  if (status === 'failed') return 'Failed'
-  if (status === 'sending') return 'Sending'
-  return 'Waiting'
 }
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {

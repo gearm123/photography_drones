@@ -56,7 +56,6 @@ function useLeadSubmit(endpoint: string) {
   const [status, setStatus] = useState<Status>('idle')
   const [formError, setFormError] = useState('')
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
-  const [confirmation, setConfirmation] = useState<'' | 'sent' | 'failed'>('')
   const startedAt = useRef(0)
 
   useEffect(() => {
@@ -75,7 +74,6 @@ function useLeadSubmit(endpoint: string) {
       const data = (await response.json().catch(() => ({}))) as {
         error?: string
         fields?: FieldErrors
-        confirmation?: string
       }
       if (!response.ok) {
         setFieldErrors(data.fields ?? {})
@@ -84,7 +82,6 @@ function useLeadSubmit(endpoint: string) {
         return
       }
       setFieldErrors({})
-      setConfirmation(data.confirmation === 'failed' ? 'failed' : data.confirmation === 'sent' ? 'sent' : '')
       setStatus('success')
     } catch {
       setFormError('We could not reach the server. Check your connection and try again.')
@@ -92,7 +89,7 @@ function useLeadSubmit(endpoint: string) {
     }
   }
 
-  return { status, formError, fieldErrors, confirmation, setFieldErrors, setFormError, setStatus, send }
+  return { status, formError, fieldErrors, setFieldErrors, setFormError, setStatus, send }
 }
 
 export function LeadForms() {
@@ -206,10 +203,7 @@ function PhotographerForm() {
   const quiet = 'text-foam/75'
   const errorTone = 'text-[#f6cfc2]'
   const show = (message?: string) => translateError(t.errors, message)
-  const thanks = fill(
-    lead.confirmation === 'failed' ? t.leads.successFailed : lead.confirmation === 'sent' ? t.leads.successSent : t.leads.successUnknown,
-    { name: name.trim(), location: location.trim() },
-  )
+  const thanks = fill(t.leads.success, { name: name.trim(), location: location.trim() })
 
   return (
     <article id="photographers" className="scroll-mt-28 rounded-[1.8rem] bg-ink p-6 text-foam sm:p-8">

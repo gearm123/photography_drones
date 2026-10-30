@@ -1,8 +1,5 @@
 import type { Config } from '@netlify/functions'
-import { attachEmails } from '../../src/lib/mailDelivery.ts'
-import { mailConfigFrom, type EmailSetup } from '../../src/lib/mailMessages.ts'
 import { mapPhotographer } from '../../src/lib/photographerRecord.ts'
-import { inspectSendingDomain } from '../../src/lib/resendMail.ts'
 import { sessionIsValid } from './adminSession.ts'
 import { database, json, saveFailed } from './leadHttp.ts'
 
@@ -63,37 +60,12 @@ export default async function handler(req: Request): Promise<Response> {
       LIMIT 500
     `
     const mapped = (Array.isArray(photographers) ? photographers : []).map(mapPhotographer)
-    let withMail = mapped
-    try {
-      withMail = await attachEmails(mapped)
-    } catch (error) {
-      console.error(`photographer email list failed: ${error instanceof Error ? error.message : 'unknown error'}`)
-    }
-    const email = await emailSetup()
     return json(200, {
       travelers: (Array.isArray(travelers) ? travelers : []).map(mapTraveler),
-      photographers: withMail,
-      email,
+      photographers: mapped,
     })
   } catch (error) {
     return saveFailed('admin leads', error)
-  }
-}
-
-async function emailSetup(): Promise<EmailSetup> {
-  try {
-    return await inspectSendingDomain(mailConfigFrom(process.env))
-  } catch (error) {
-    console.error(`email domain check failed: ${error instanceof Error ? error.message : 'unknown error'}`)
-    return {
-      configured: false,
-      from: '',
-      adminEmail: '',
-      domain: '',
-      domainStatus: 'unknown',
-      detail: 'The email provider could not be checked. Applications are still saved.',
-      records: [],
-    }
   }
 }
 

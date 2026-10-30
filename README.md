@@ -25,31 +25,27 @@ Lead rows are stored in Netlify Database (PostgreSQL).
 - `traveler_leads` — name, email, destination, service tier
 - `photographer_leads` — private application: name, email, WhatsApp number, location, working areas, equipment, experience, availability, specialties, proposed hourly rate, portfolio links, and status
 - `photographer_profiles` — public profile for the apps: name, location, working areas, specialties, hourly rate, and portfolio links. A row is active only while the application status is approved
-- `photographer_emails` — one delivery record per application message, so a sent email is not sent again
+- `photographer_emails` — leftover delivery rows from the earlier mail provider. New notices go through Netlify Forms and do not write to this table.
 
 Migrations live in `netlify/database/migrations`. Netlify applies them on deploy. Apply them locally with `npm run db:migrate`. Database credentials stay on the server. The website posts photographer applications to `/api/photographer-leads`. It does not collect new traveler sign-ups.
 
 ## Admin
 
-Open `/admin` and sign in with the `ADMIN_PASSWORD` environment variable. The password stays on the server. After sign-in you can filter applications by pending, approved, or rejected, open a profile and its portfolio links, approve or reject an application, and edit, suspend, or deactivate a photographer. The same page shows whether each email was sent and can retry a failed one. Set the variable to at least 8 characters in Netlify, or in a local `.env` file when using `netlify dev`. Do not commit `.env`.
+Open `/admin` and sign in with the `ADMIN_PASSWORD` environment variable. The password stays on the server. After sign-in you can filter applications by pending, approved, or rejected, open a profile and its portfolio links, approve or reject an application, and edit, suspend, or deactivate a photographer. The same page can send the application to you again through Netlify Forms. Set the variable to at least 8 characters in Netlify, or in a local `.env` file when using `netlify dev`. Do not commit `.env`.
 
 ## Email
 
-Photographer applications send transactional email through [Resend](https://resend.com).
+A new photographer application is saved in the database and submitted to the Netlify Form `photographer-application`. Netlify emails the addresses you add for that form. The form field named `email` is the photographer, so a reply to the notification goes to them.
 
-- The photographer receives a confirmation when the application is saved.
-- `ADMIN_EMAIL` receives one notice for each new application.
-- Approving or rejecting sends one email to the photographer. Suspend, restore, and profile edits do not send another decision email.
-- Each message is stored once in `photographer_emails`. A sent message is not sent again. A failed send stays on the application and can be retried from `/admin`. Resend idempotency keys stop a retry of an uncertain delivery from sending a second copy within 24 hours.
-- The application is saved even when email fails.
+Netlify does not send a separate confirmation, approval, or rejection to the photographer. Approving or rejecting in `/admin` does not send another email. The application is saved even when the form submission fails. Open the application and choose **Email this application** to submit it again.
 
-Set these with `ADMIN_PASSWORD` in Netlify, and in `.env` for `netlify dev`:
+After the first deploy that includes `public/forms.html`:
 
-- `RESEND_API_KEY`
-- `EMAIL_FROM` — for example `Tripframe <hello@tripframe.com>`
-- `ADMIN_EMAIL` — inbox for new-application notices
+1. In Netlify, open **Forms** and confirm form detection is enabled. The form name is `photographer-application`.
+2. Open **Form submission notifications** and add an email notification for that form. Use the inbox that should receive new applications.
+3. Trigger a deploy if the form does not appear yet, then use **Email this application** for any application that arrived before this was set up.
 
-To verify the sending domain, add the domain from `EMAIL_FROM` in Resend and publish the SPF and DKIM records it shows. The admin dashboard reports whether that domain is verified and lists any sending records still outstanding. Until verification succeeds, applications are still saved and the failed emails can be retried.
+`RESEND_API_KEY`, `EMAIL_FROM`, and `ADMIN_EMAIL` are no longer used.
 
 ## Mobile app API
 
@@ -69,11 +65,8 @@ On that first Netlify deploy, `@netlify/database` provisions PostgreSQL and Netl
 Before the deploy, set these environment variables on the Netlify site:
 
 - `ADMIN_PASSWORD` — at least 8 characters
-- `RESEND_API_KEY` — Resend API key for transactional email
-- `EMAIL_FROM` — verified sender, for example `Tripframe <hello@tripframe.com>`
-- `ADMIN_EMAIL` — inbox that receives new photographer applications
 
-Without `ADMIN_PASSWORD`, the public form can still save applications, but `/admin` cannot sign in. Without the email variables, applications are still saved and the dashboard shows that mail is not configured.
+Without `ADMIN_PASSWORD`, the public form can still save applications, but `/admin` cannot sign in. Form notification emails are configured in the Netlify UI, not with an environment variable.
 
 After the site has a real domain, replace `https://tripframe.netlify.app` in:
 

@@ -157,8 +157,8 @@ export const fr: Copy = {
         body: 'Envoyez votre WhatsApp, votre matériel, votre expérience, vos disponibilités, vos zones, votre tarif horaire, vos spécialités et au moins un lien de portfolio.',
       },
       {
-        title: 'Attendre l’e-mail de décision',
-        body: 'Nous envoyons une confirmation quand la candidature est enregistrée en attente, puis un autre message quand elle est acceptée ou non.',
+        title: 'Attendre l’examen',
+        body: 'La candidature reste en attente jusqu’à l’examen par Tripframe. Nous écrivons à l’adresse de la candidature si nous devons vous joindre.',
       },
       {
         title: 'Votre profil public est préparé',
@@ -232,14 +232,9 @@ export const fr: Copy = {
       'Trouvez un photographe dans l’application Tripframe. Il n’y a pas d’inscription voyageur sur ce site. Les applications iPhone et Android sont encore en construction, donc les boutons ci-dessous n’ouvrent pas de boutique.',
     formTitle: 'Pour les photographes',
     formBody:
-      'Candidatez avec votre matériel, vos tarifs et vos zones. Chaque candidature est enregistrée en attente et nous vous écrivons après examen. Cela ne réserve pas de séance aujourd’hui.',
+      'Candidatez avec votre matériel, vos tarifs et vos zones. Chaque candidature est enregistrée en attente. Cela ne réserve pas de séance aujourd’hui.',
     received: 'Candidature reçue.',
-    successSent:
-      'Merci, {name}. Votre candidature pour {location} est enregistrée en attente. Nous vous avons envoyé une confirmation et nous vous écrirons encore après l’examen.',
-    successFailed:
-      'Merci, {name}. Votre candidature pour {location} est enregistrée en attente. L’e-mail de confirmation n’a pas pu être envoyé, et il peut être relancé depuis le tableau d’administration.',
-    successUnknown:
-      'Merci, {name}. Votre candidature pour {location} est enregistrée en attente. Nous vous enverrons une confirmation, puis un message après l’examen.',
+    success: 'Merci, {name}. Votre candidature pour {location} est enregistrée en attente.',
     name: 'Nom',
     email: 'E-mail',
     phone: 'Téléphone / WhatsApp',

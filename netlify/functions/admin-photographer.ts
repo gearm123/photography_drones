@@ -1,7 +1,6 @@
 import type { Config } from '@netlify/functions'
-import { attachEmails, deliverEmails, retryPhotographerEmails } from '../../src/lib/mailDelivery.ts'
-import { mailConfigFrom } from '../../src/lib/mailMessages.ts'
 import { readPhotographerBody } from '../../src/lib/leadRules.ts'
+import { submitPhotographerForm } from '../../src/lib/netlifyForm.ts'
 import { mapPhotographer } from '../../src/lib/photographerRecord.ts'
 import { statusAfter } from '../../src/lib/photographerStatus.ts'
 import { syncPublicProfile } from '../../src/lib/publicProfileSync.ts'
@@ -9,6 +8,10 @@ import { sessionIsValid } from './adminSession.ts'
 import { database, errorText, json, readJson, saveFailed } from './leadHttp.ts'
 
 type LeadRow = Record<string, unknown>
+
+function siteOrigin(): string {
+  return process.env.DEPLOY_PRIME_URL || process.env.URL || 'https://tripframe.netlify.app'
+}
 
 function photographerId(req: Request): number | null {
   const id = new URL(req.url).pathname.split('/').filter(Boolean).at(-1) ?? ''
@@ -21,25 +24,13 @@ function firstRow(rows: LeadRow[] | LeadRow): LeadRow | undefined {
   return Array.isArray(rows) ? rows[0] : undefined
 }
 
-async function withEmails(row: LeadRow, mode: 'keep' | 'retry' | 'approved' | 'rejected') {
-  const config = mailConfigFrom(process.env)
+async function finish(row: LeadRow) {
   try {
     await syncPublicProfile(row)
   } catch (error) {
     console.error(`public profile sync failed: ${error instanceof Error ? error.message : 'unknown error'}`)
   }
-  try {
-    const emails =
-      mode === 'retry'
-        ? await retryPhotographerEmails(row, config)
-        : mode === 'approved' || mode === 'rejected'
-          ? await deliverEmails(row, [mode], config)
-          : (await attachEmails([mapPhotographer(row)]))[0]?.emails ?? []
-    return { ...mapPhotographer(row), emails }
-  } catch (error) {
-    console.error(`photographer email failed: ${error instanceof Error ? error.message : 'unknown error'}`)
-    return mapPhotographer(row)
-  }
+  return mapPhotographer(row)
 }
 
 function duplicateFields(rows: LeadRow[], email: string, phone: string) {
@@ -77,7 +68,11 @@ export default async function handler(req: Request): Promise<Response> {
     if (!current) return json(404, { error: 'Photographer not found.' })
     const currentStatus = typeof current.status === 'string' ? current.status : 'pending'
 
-    if (action === 'retry-emails') return json(200, { photographer: await withEmails(current, 'retry') })
+    if (action === 'notify') {
+      const notice = await submitPhotographerForm(mapPhotographer(current), siteOrigin())
+      if (!notice.ok) return json(502, { error: notice.error })
+      return json(200, { photographer: mapPhotographer(current) })
+    }
 
     if (action === 'edit') {
       const lead = readPhotographerBody(parsed.body)
@@ -115,7 +110,7 @@ export default async function handler(req: Request): Promise<Response> {
       `
       const row = firstRow(updated)
       if (!row) return json(404, { error: 'Photographer not found.' })
-      return json(200, { photographer: await withEmails(row, 'keep') })
+      return json(200, { photographer: await finish(row) })
     }
 
     const next = statusAfter(action, currentStatus)
@@ -130,8 +125,7 @@ export default async function handler(req: Request): Promise<Response> {
     `
     const row = firstRow(updated)
     if (!row) return json(409, { error: 'That application changed. Refresh and try again.' })
-    const decision = next === 'approved' || next === 'rejected' ? next : null
-    return json(200, { photographer: await withEmails(row, decision ?? 'keep') })
+    return json(200, { photographer: await finish(row) })
   } catch (error) {
     const text = errorText(error)
     if (text.includes('23505') || text.toLowerCase().includes('duplicate key')) {

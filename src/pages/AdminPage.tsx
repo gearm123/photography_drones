@@ -1,7 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { serviceOptions } from '../lib/leadRules.ts'
 import type { PhotographerRecord } from '../lib/photographerRecord.ts'
-import type { EmailSetup } from '../lib/mailMessages.ts'
 import { PhotographerAdmin } from './PhotographerAdmin.tsx'
 
 type TravelerLead = {
@@ -18,7 +17,6 @@ type PhotographerLead = PhotographerRecord
 type LeadsResponse = {
   travelers: TravelerLead[]
   photographers: PhotographerLead[]
-  email?: EmailSetup
 }
 
 const fieldClass =
@@ -228,7 +226,7 @@ function LeadLists({
 }) {
   return (
     <div className="mt-12 space-y-16">
-      <PhotographerAdmin photographers={leads.photographers} emailSetup={leads.email} onUpdated={onUpdated} />
+      <PhotographerAdmin photographers={leads.photographers} onUpdated={onUpdated} />
       <section aria-labelledby="traveler-leads">
         <h2 id="traveler-leads" className="text-3xl">
           Earlier traveler requests

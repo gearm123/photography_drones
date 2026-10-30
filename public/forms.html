@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Photographer application</title>
+  </head>
+  <body>
+    <!-- Static form so Netlify can detect photographer-application and email its notification address. -->
+    <form
+      name="photographer-application"
+      method="POST"
+      action="/forms.html"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      hidden
+    >
+      <p hidden>
+        <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+      </p>
+      <input type="hidden" name="subject" value="New Tripframe photographer application" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="phone" />
+      <input type="text" name="location" />
+      <input type="text" name="working-areas" />
+      <input type="text" name="specialties" />
+      <input type="text" name="hourly-rate" />
+      <input type="text" name="availability" />
+      <input type="text" name="experience" />
+      <textarea name="equipment"></textarea>
+      <textarea name="portfolio"></textarea>
+    </form>
+  </body>
+</html>
