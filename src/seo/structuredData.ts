@@ -5,9 +5,9 @@ import type { Locale } from '../i18n/types.ts'
 import { SITE_NAME, SITE_ORIGIN, SUPPORT_EMAIL, localeUrl } from './site.ts'
 
 const CITIES = [
-  { '@type': 'City', name: 'Lisbon', addressCountry: 'PT' },
-  { '@type': 'City', name: 'Cascais', addressCountry: 'PT' },
-  { '@type': 'City', name: 'Sintra', addressCountry: 'PT' },
+  { '@type': 'City', name: 'Tel Aviv', addressCountry: 'IL' },
+  { '@type': 'City', name: 'Jerusalem', addressCountry: 'IL' },
+  { '@type': 'City', name: 'Haifa', addressCountry: 'IL' },
 ] as const
 
 const organizationId = `${SITE_ORIGIN}/#organization`

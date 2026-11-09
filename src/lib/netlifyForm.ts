@@ -1,4 +1,11 @@
 import { currencyOptions, serviceOptions, specializationOptions } from './leadRules.ts'
+import {
+  availabilityOptions,
+  choiceLabel,
+  equipmentOptions,
+  experienceOptions,
+  israelCities,
+} from './photographerChoices.ts'
 import type { PhotographerRecord } from './photographerRecord.ts'
 
 const FORM_NAME = 'photographer-application'
@@ -19,13 +26,13 @@ export async function submitPhotographerForm(
     name: clip(photographer.name, 80),
     email: clip(photographer.email, 120),
     phone: clip(photographer.phone, 40),
-    location: clip(photographer.location, 120),
-    'working-areas': clip(photographer.workingAreas, 300),
+    location: clip(cityLine(photographer.location), 120),
+    'working-areas': clip(areasLine(photographer.workingAreas), 800),
     specialties: clip(specialties, 200),
     'hourly-rate': clip(rateLine(photographer.hourlyRateCents, photographer.currency), 40),
-    availability: clip(photographer.availability, 300),
-    experience: clip(photographer.experience, 300),
-    equipment: clip(photographer.equipment, 400),
+    availability: clip(choiceLabel(photographer.availability, availabilityOptions), 300),
+    experience: clip(choiceLabel(photographer.experience, experienceOptions), 300),
+    equipment: clip(choiceLabel(photographer.equipment, equipmentOptions), 400),
     portfolio: clip(photographer.portfolioUrls.join('\n'), 1000),
   })
 
@@ -53,6 +60,18 @@ function rateLine(cents: string, currency: string): string {
     return 'Not provided'
   }
   return new Intl.NumberFormat('en', { style: 'currency', currency }).format(amount / 100)
+}
+
+function cityLine(value: string): string {
+  return israelCities.find((city) => city === value) ?? value
+}
+
+function areasLine(value: string): string {
+  return value
+    .split(',')
+    .map((part) => cityLine(part.trim()))
+    .filter(Boolean)
+    .join(', ')
 }
 
 function clip(value: string, max: number): string {

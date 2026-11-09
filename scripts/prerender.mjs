@@ -33,7 +33,7 @@ if (!visible.includes('Your Trip Deserves More Than Selfies.')) {
 if (!visible.includes('Join Our Photographer Network') || !visible.includes('App Store') || !visible.includes('Google Play')) {
   throw new Error('Prerendered HTML is missing the photographer form or the app downloads')
 }
-if (!visible.includes('Why photographers join Tripframe.') || !visible.includes('You keep 80%') || !visible.includes('Lisbon')) {
+if (!visible.includes('Why photographers join Tripframe.') || !visible.includes('You keep 80%') || !visible.includes('Tel Aviv')) {
   throw new Error('Prerendered HTML is missing the photographer program')
 }
 if (!visible.includes('Photographer questions.') || !visible.includes('hello@tripframe.com')) {

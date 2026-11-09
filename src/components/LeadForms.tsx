@@ -1,12 +1,15 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 import { translateError } from '../i18n/translations.ts'
+import { serviceOptions, validatePhotographer, type FieldErrors } from '../lib/leadRules.ts'
 import {
-  currencyOptions,
-  serviceOptions,
-  validatePhotographer,
-  type FieldErrors,
-} from '../lib/leadRules.ts'
+  availabilityOptions,
+  equipmentOptions,
+  experienceOptions,
+  israelCities,
+  rateOptions,
+  type IsraelCity,
+} from '../lib/photographerChoices.ts'
 import { AppDownloads } from './AppDownloads.tsx'
 import { Eyebrow, Reveal } from './Reveal.tsx'
 
@@ -141,17 +144,20 @@ function PhotographerForm() {
   const [equipment, setEquipment] = useState('')
   const [experience, setExperience] = useState('')
   const [availability, setAvailability] = useState('')
-  const [workingAreas, setWorkingAreas] = useState('')
+  const [workingAreas, setWorkingAreas] = useState<string[]>([])
   const [hourlyRate, setHourlyRate] = useState('')
-  const [currency, setCurrency] = useState('USD')
   const [specialties, setSpecialties] = useState<string[]>([])
   const [portfolio, setPortfolio] = useState('')
-  const [portfolio2, setPortfolio2] = useState('')
-  const [portfolio3, setPortfolio3] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
 
   function toggleSpecialty(value: string) {
     setSpecialties((current) =>
+      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+    )
+  }
+
+  function toggleArea(value: string) {
+    setWorkingAreas((current) =>
       current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
     )
   }
@@ -166,11 +172,11 @@ function PhotographerForm() {
       equipment,
       experience,
       availability,
-      workingAreas,
+      workingAreas: workingAreas.join(', '),
       hourlyRate,
-      currency,
+      currency: hourlyRate ? 'ILS' : '',
       specialties,
-      portfolios: [portfolio, portfolio2, portfolio3],
+      portfolios: [portfolio],
     })
     if (!result.ok) {
       lead.setFieldErrors(result.fields)
@@ -191,8 +197,8 @@ function PhotographerForm() {
         experience: result.value.experience,
         availability: result.value.availability,
         workingAreas: result.value.workingAreas,
-        hourlyRate: (result.value.hourlyRateCents / 100).toFixed(2),
-        currency: result.value.currency,
+        hourlyRate: result.value.hourlyRateCents == null ? '' : (result.value.hourlyRateCents / 100).toFixed(2),
+        currency: result.value.currency ?? '',
         specialties: result.value.specialties,
         portfolios: result.value.portfolioUrls,
       },
@@ -203,7 +209,8 @@ function PhotographerForm() {
   const quiet = 'text-foam/75'
   const errorTone = 'text-[#f6cfc2]'
   const show = (message?: string) => translateError(t.errors, message)
-  const thanks = fill(t.leads.success, { name: name.trim(), location: location.trim() })
+  const cityName = (value: string) => (value in t.leads.cityNames ? t.leads.cityNames[value as IsraelCity] : value)
+  const thanks = fill(t.leads.success, { name: name.trim(), location: cityName(location) })
 
   return (
     <article id="photographers" className="scroll-mt-28 rounded-[1.8rem] bg-ink p-6 text-foam sm:p-8">
@@ -267,96 +274,25 @@ function PhotographerForm() {
             />
           </Field>
           <Field id={`${formId}-location`} label={t.leads.location} error={show(lead.fieldErrors.location)} errorClassName={errorTone}>
-            <input
+            <select
               id={`${formId}-location`}
               name="location"
-              autoComplete="address-level2"
-              placeholder={t.leads.locationPlaceholder}
               value={location}
               onChange={(event) => setLocation(event.target.value)}
               className={fieldClass}
               aria-invalid={Boolean(lead.fieldErrors.location)}
               aria-describedby={lead.fieldErrors.location ? `${formId}-location-error` : undefined}
               required
-            />
+            >
+              <option value="">{t.leads.chooseCity}</option>
+              {israelCities.map((city) => (
+                <option key={city} value={city}>
+                  {cityName(city)}
+                </option>
+              ))}
+            </select>
           </Field>
-          <Field
-            id={`${formId}-working-areas`}
-            label={t.leads.areas}
-            error={show(lead.fieldErrors.workingAreas)}
-            errorClassName={errorTone}
-          >
-            <input
-              id={`${formId}-working-areas`}
-              name="workingAreas"
-              placeholder={t.leads.areasPlaceholder}
-              value={workingAreas}
-              onChange={(event) => setWorkingAreas(event.target.value)}
-              className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.workingAreas)}
-              aria-describedby={lead.fieldErrors.workingAreas ? `${formId}-working-areas-error` : undefined}
-              required
-            />
-          </Field>
-          <Field
-            id={`${formId}-equipment`}
-            label={t.leads.equipment}
-            error={show(lead.fieldErrors.equipment)}
-            errorClassName={errorTone}
-          >
-            <textarea
-              id={`${formId}-equipment`}
-              name="equipment"
-              rows={3}
-              placeholder={t.leads.equipmentPlaceholder}
-              value={equipment}
-              onChange={(event) => setEquipment(event.target.value)}
-              className={`${fieldClass} min-h-24 resize-y`}
-              aria-invalid={Boolean(lead.fieldErrors.equipment)}
-              aria-describedby={lead.fieldErrors.equipment ? `${formId}-equipment-error` : undefined}
-              required
-            />
-          </Field>
-          <Field
-            id={`${formId}-experience`}
-            label={t.leads.experience}
-            error={show(lead.fieldErrors.experience)}
-            errorClassName={errorTone}
-          >
-            <textarea
-              id={`${formId}-experience`}
-              name="experience"
-              rows={3}
-              placeholder={t.leads.experiencePlaceholder}
-              value={experience}
-              onChange={(event) => setExperience(event.target.value)}
-              className={`${fieldClass} min-h-24 resize-y`}
-              aria-invalid={Boolean(lead.fieldErrors.experience)}
-              aria-describedby={lead.fieldErrors.experience ? `${formId}-experience-error` : undefined}
-              required
-            />
-          </Field>
-          <Field
-            id={`${formId}-availability`}
-            label={t.leads.availability}
-            error={show(lead.fieldErrors.availability)}
-            errorClassName={errorTone}
-          >
-            <input
-              id={`${formId}-availability`}
-              name="availability"
-              placeholder={t.leads.availabilityPlaceholder}
-              value={availability}
-              onChange={(event) => setAvailability(event.target.value)}
-              className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.availability)}
-              aria-describedby={lead.fieldErrors.availability ? `${formId}-availability-error` : undefined}
-              required
-            />
-          </Field>
-          <fieldset
-            aria-describedby={lead.fieldErrors.specialties ? `${formId}-specialties-error` : undefined}
-          >
+          <fieldset aria-describedby={lead.fieldErrors.specialties ? `${formId}-specialties-error` : undefined}>
             <legend className="text-sm font-medium">{t.leads.specialties}</legend>
             <div className="mt-2 grid gap-2 sm:grid-cols-2">
               {serviceOptions.map((option) => (
@@ -382,56 +318,74 @@ function PhotographerForm() {
               </p>
             ) : null}
           </fieldset>
-          <div className="grid gap-5 sm:grid-cols-[1fr_8rem]">
-            <Field
-              id={`${formId}-rate`}
-              label={t.leads.rate}
-              error={show(lead.fieldErrors.hourlyRate)}
-              errorClassName={errorTone}
-            >
-              <input
-                id={`${formId}-rate`}
-                name="hourlyRate"
-                inputMode="decimal"
-                placeholder={t.leads.ratePlaceholder}
-                value={hourlyRate}
-                onChange={(event) => setHourlyRate(event.target.value)}
-                className={fieldClass}
-                aria-invalid={Boolean(lead.fieldErrors.hourlyRate)}
-                aria-describedby={lead.fieldErrors.hourlyRate ? `${formId}-rate-error` : undefined}
-                required
-              />
-            </Field>
-            <Field
-              id={`${formId}-currency`}
-              label={t.leads.currency}
-              error={show(lead.fieldErrors.currency)}
-              errorClassName={errorTone}
-            >
-              <select
-                id={`${formId}-currency`}
-                name="currency"
-                value={currency}
-                onChange={(event) => setCurrency(event.target.value)}
-                className={fieldClass}
-                aria-invalid={Boolean(lead.fieldErrors.currency)}
-                aria-describedby={lead.fieldErrors.currency ? `${formId}-currency-error` : undefined}
-                required
-              >
-                {currencyOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </Field>
+          <div className="border-t border-white/10 pt-5">
+            <p className={`text-sm ${quiet}`}>{t.leads.optionalIntro}</p>
           </div>
-          <Field
-            id={`${formId}-portfolio`}
-            label={t.leads.portfolio}
-            error={show(lead.fieldErrors.portfolio)}
-            errorClassName={errorTone}
-          >
+          <fieldset aria-describedby={lead.fieldErrors.workingAreas ? `${formId}-areas-error` : undefined}>
+            <legend className="text-sm font-medium">{t.leads.areas}</legend>
+            <p className={`mt-1 text-sm ${quiet}`}>{t.leads.areasHint}</p>
+            <div className="mt-2 grid max-h-56 gap-2 overflow-y-auto sm:grid-cols-2">
+              {israelCities.map((city) => (
+                <label key={city} className="flex min-h-11 items-center gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm">
+                  <input
+                    type="checkbox"
+                    name="workingAreas"
+                    value={city}
+                    checked={workingAreas.includes(city)}
+                    onChange={() => toggleArea(city)}
+                    className="size-4 accent-sea"
+                  />
+                  {cityName(city)}
+                </label>
+              ))}
+            </div>
+            {lead.fieldErrors.workingAreas ? (
+              <p id={`${formId}-areas-error`} className={`mt-2 text-sm ${errorTone}`}>
+                {show(lead.fieldErrors.workingAreas)}
+              </p>
+            ) : null}
+          </fieldset>
+          <Field id={`${formId}-equipment`} label={t.leads.equipment} error={show(lead.fieldErrors.equipment)} errorClassName={errorTone}>
+            <select id={`${formId}-equipment`} name="equipment" value={equipment} onChange={(event) => setEquipment(event.target.value)} className={fieldClass}>
+              <option value="">{t.leads.skip}</option>
+              {equipmentOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {t.leads.equipmentOptions[option.value]}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field id={`${formId}-experience`} label={t.leads.experience} error={show(lead.fieldErrors.experience)} errorClassName={errorTone}>
+            <select id={`${formId}-experience`} name="experience" value={experience} onChange={(event) => setExperience(event.target.value)} className={fieldClass}>
+              <option value="">{t.leads.skip}</option>
+              {experienceOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {t.leads.experienceOptions[option.value]}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field id={`${formId}-availability`} label={t.leads.availability} error={show(lead.fieldErrors.availability)} errorClassName={errorTone}>
+            <select id={`${formId}-availability`} name="availability" value={availability} onChange={(event) => setAvailability(event.target.value)} className={fieldClass}>
+              <option value="">{t.leads.skip}</option>
+              {availabilityOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {t.leads.availabilityOptions[option.value]}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field id={`${formId}-rate`} label={t.leads.rate} error={show(lead.fieldErrors.hourlyRate)} errorClassName={errorTone}>
+            <select id={`${formId}-rate`} name="hourlyRate" value={hourlyRate} onChange={(event) => setHourlyRate(event.target.value)} className={fieldClass}>
+              <option value="">{t.leads.skip}</option>
+              {rateOptions.map((amount) => (
+                <option key={amount} value={String(amount)}>
+                  ₪{amount}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field id={`${formId}-portfolio`} label={t.leads.portfolio} error={show(lead.fieldErrors.portfolio)} errorClassName={errorTone}>
             <input
               id={`${formId}-portfolio`}
               name="portfolio"
@@ -444,45 +398,6 @@ function PhotographerForm() {
               className={fieldClass}
               aria-invalid={Boolean(lead.fieldErrors.portfolio)}
               aria-describedby={lead.fieldErrors.portfolio ? `${formId}-portfolio-error` : undefined}
-              required
-            />
-          </Field>
-          <Field
-            id={`${formId}-portfolio-2`}
-            label={t.leads.portfolioMore}
-            error={show(lead.fieldErrors.portfolio2)}
-            errorClassName={errorTone}
-          >
-            <input
-              id={`${formId}-portfolio-2`}
-              name="portfolio2"
-              type="text"
-              inputMode="url"
-              placeholder={t.leads.portfolioPlaceholder}
-              value={portfolio2}
-              onChange={(event) => setPortfolio2(event.target.value)}
-              className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.portfolio2)}
-              aria-describedby={lead.fieldErrors.portfolio2 ? `${formId}-portfolio-2-error` : undefined}
-            />
-          </Field>
-          <Field
-            id={`${formId}-portfolio-3`}
-            label={t.leads.portfolioMore}
-            error={show(lead.fieldErrors.portfolio3)}
-            errorClassName={errorTone}
-          >
-            <input
-              id={`${formId}-portfolio-3`}
-              name="portfolio3"
-              type="text"
-              inputMode="url"
-              placeholder={t.leads.portfolioPlaceholder}
-              value={portfolio3}
-              onChange={(event) => setPortfolio3(event.target.value)}
-              className={fieldClass}
-              aria-invalid={Boolean(lead.fieldErrors.portfolio3)}
-              aria-describedby={lead.fieldErrors.portfolio3 ? `${formId}-portfolio-3-error` : undefined}
             />
           </Field>
           {lead.formError ? (

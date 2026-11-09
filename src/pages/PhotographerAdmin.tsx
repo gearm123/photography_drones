@@ -1,5 +1,14 @@
 import { useMemo, useState, type FormEvent, type ReactNode } from 'react'
 import { currencyOptions, serviceOptions, specializationOptions, validatePhotographer, type FieldErrors } from '../lib/leadRules.ts'
+import {
+  availabilityOptions,
+  choiceLabel,
+  equipmentOptions,
+  experienceOptions,
+  israelCities,
+  isIsraelCity,
+  rateOptions,
+} from '../lib/photographerChoices.ts'
 import type { PhotographerRecord } from '../lib/photographerRecord.ts'
 import { isPhotographerStatus, profileFilters, reviewFilters, statusLabel, type PhotographerStatus, type ProfileAction } from '../lib/photographerStatus.ts'
 
@@ -41,6 +50,19 @@ function rateInput(cents: string) {
 
 function shown(value: string) {
   return value.trim() || 'Not provided'
+}
+
+function areaLabels(value: string) {
+  return value
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(', ')
+}
+
+function withCurrent(options: readonly { value: string; label: string }[], current: string) {
+  if (!current || options.some((option) => option.value === current)) return options
+  return [{ value: current, label: current }, ...options]
 }
 
 function actionsFor(status: string): { action: ProfileAction; label: string; tone: 'primary' | 'quiet' | 'warn' }[] {
@@ -274,10 +296,10 @@ function PhotographerDetail({
             : 'Not provided'}
         </Detail>
         <Detail label="Hourly rate">{formatRate(lead.hourlyRateCents, lead.currency)}</Detail>
-        <Detail label="Working areas">{shown(lead.workingAreas)}</Detail>
-        <Detail label="Availability">{shown(lead.availability)}</Detail>
-        <Detail label="Experience">{shown(lead.experience)}</Detail>
-        <Detail label="Equipment">{shown(lead.equipment)}</Detail>
+        <Detail label="Working areas">{shown(areaLabels(lead.workingAreas))}</Detail>
+        <Detail label="Availability">{shown(choiceLabel(lead.availability, availabilityOptions))}</Detail>
+        <Detail label="Experience">{shown(choiceLabel(lead.experience, experienceOptions))}</Detail>
+        <Detail label="Equipment">{shown(choiceLabel(lead.equipment, equipmentOptions))}</Detail>
         <Detail label="Portfolio">
           {lead.portfolioUrls.length > 0 ? (
             <ul className="space-y-1">
@@ -353,12 +375,24 @@ function EditForm({
   const [email, setEmail] = useState(lead.email)
   const [phone, setPhone] = useState(lead.phone)
   const [location, setLocation] = useState(lead.location)
-  const [workingAreas, setWorkingAreas] = useState(lead.workingAreas)
+  const [workingAreas, setWorkingAreas] = useState<string[]>(() =>
+    lead.workingAreas
+      .split(',')
+      .map((part) => part.trim())
+      .filter(isIsraelCity),
+  )
+  const [legacyAreas] = useState(() => {
+    const known = lead.workingAreas
+      .split(',')
+      .map((part) => part.trim())
+      .filter(isIsraelCity)
+    return known.length === 0 ? lead.workingAreas.trim() : ''
+  })
   const [equipment, setEquipment] = useState(lead.equipment)
   const [experience, setExperience] = useState(lead.experience)
   const [availability, setAvailability] = useState(lead.availability)
   const [hourlyRate, setHourlyRate] = useState(rateInput(lead.hourlyRateCents))
-  const [currency, setCurrency] = useState(currencyOptions.some((option) => option.value === lead.currency) ? lead.currency : 'USD')
+  const [currency, setCurrency] = useState(currencyOptions.some((option) => option.value === lead.currency) ? lead.currency : 'ILS')
   const validSpecialties = lead.specialties.filter((item) => serviceOptions.some((option) => option.value === item))
   const [specialties, setSpecialties] = useState<string[]>(validSpecialties)
   const [portfolio, setPortfolio] = useState(lead.portfolioUrls[0] ?? '')
@@ -370,22 +404,36 @@ function EditForm({
     setSpecialties((current) => (current.includes(value) ? current.filter((item) => item !== value) : [...current, value]))
   }
 
+  function toggleArea(city: string) {
+    setWorkingAreas((current) => (current.includes(city) ? current.filter((item) => item !== city) : [...current, city]))
+  }
+
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const result = validatePhotographer({
-      name,
-      email,
-      phone,
-      location,
-      equipment,
-      experience,
-      availability,
-      workingAreas,
-      hourlyRate,
-      currency,
-      specialties,
-      portfolios: [portfolio, portfolio2, portfolio3],
-    })
+    const result = validatePhotographer(
+      {
+        name,
+        email,
+        phone,
+        location,
+        equipment,
+        experience,
+        availability,
+        workingAreas: workingAreas.length > 0 ? workingAreas.join(', ') : legacyAreas,
+        hourlyRate,
+        currency,
+        specialties,
+        portfolios: [portfolio, portfolio2, portfolio3],
+      },
+      {
+        location: lead.location,
+        equipment: lead.equipment,
+        experience: lead.experience,
+        availability: lead.availability,
+        workingAreas: lead.workingAreas,
+        hourlyRate: rateInput(lead.hourlyRateCents),
+      },
+    )
     if (!result.ok) {
       setFields(result.fields)
       return
@@ -401,8 +449,8 @@ function EditForm({
       experience: result.value.experience,
       availability: result.value.availability,
       workingAreas: result.value.workingAreas,
-      hourlyRate: (result.value.hourlyRateCents / 100).toFixed(2),
-      currency: result.value.currency,
+      hourlyRate: result.value.hourlyRateCents == null ? '' : (result.value.hourlyRateCents / 100).toFixed(2),
+      currency: result.value.currency ?? '',
       specialties: result.value.specialties,
       portfolios: result.value.portfolioUrls,
     })
@@ -421,23 +469,89 @@ function EditForm({
         <EditorField label="WhatsApp" error={fields.phone || serverFields.phone}>
           <input className={fieldClass} value={phone} onChange={(event) => setPhone(event.target.value)} required />
         </EditorField>
-        <EditorField label="Location" error={fields.location}>
-          <input className={fieldClass} value={location} onChange={(event) => setLocation(event.target.value)} required />
+        <EditorField label="City in Israel" error={fields.location}>
+          <select className={fieldClass} value={location} onChange={(event) => setLocation(event.target.value)} required>
+            <option value="">Choose a city</option>
+            {withCurrent(
+              israelCities.map((city) => ({ value: city, label: city })),
+              location,
+            ).map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </EditorField>
-        <EditorField label="Working areas" error={fields.workingAreas}>
-          <input className={fieldClass} value={workingAreas} onChange={(event) => setWorkingAreas(event.target.value)} required />
+        <div className="sm:col-span-2">
+          <fieldset>
+            <legend className="text-sm font-medium">Also available in (optional)</legend>
+            {legacyAreas ? <p className="mt-2 text-sm font-normal text-muted">Saved note: {legacyAreas}</p> : null}
+            <div className="mt-2 grid max-h-56 gap-2 overflow-y-auto sm:grid-cols-2">
+              {israelCities.map((city) => (
+                <label key={city} className="flex min-h-11 items-center gap-3 rounded-2xl border border-line px-3 text-sm font-normal">
+                  <input
+                    type="checkbox"
+                    checked={workingAreas.includes(city)}
+                    onChange={() => toggleArea(city)}
+                    className="size-4 accent-sea"
+                  />
+                  {city}
+                </label>
+              ))}
+            </div>
+            {fields.workingAreas ? <p className="mt-2 text-sm font-normal text-clay">{fields.workingAreas}</p> : null}
+          </fieldset>
+        </div>
+        <EditorField label="Availability (optional)" error={fields.availability}>
+          <select className={fieldClass} value={availability} onChange={(event) => setAvailability(event.target.value)}>
+            <option value="">Not set</option>
+            {withCurrent(availabilityOptions, availability).map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </EditorField>
-        <EditorField label="Availability" error={fields.availability}>
-          <input className={fieldClass} value={availability} onChange={(event) => setAvailability(event.target.value)} required />
+        <EditorField label="Equipment (optional)" error={fields.equipment}>
+          <select className={fieldClass} value={equipment} onChange={(event) => setEquipment(event.target.value)}>
+            <option value="">Not set</option>
+            {withCurrent(equipmentOptions, equipment).map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </EditorField>
-        <EditorField label="Equipment" error={fields.equipment}>
-          <textarea className={`${fieldClass} min-h-24`} value={equipment} onChange={(event) => setEquipment(event.target.value)} required />
+        <EditorField label="Experience (optional)" error={fields.experience}>
+          <select className={fieldClass} value={experience} onChange={(event) => setExperience(event.target.value)}>
+            <option value="">Not set</option>
+            {withCurrent(experienceOptions, experience).map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </EditorField>
-        <EditorField label="Experience" error={fields.experience}>
-          <textarea className={`${fieldClass} min-h-24`} value={experience} onChange={(event) => setExperience(event.target.value)} required />
-        </EditorField>
-        <EditorField label="Hourly rate" error={fields.hourlyRate}>
-          <input className={fieldClass} inputMode="decimal" value={hourlyRate} onChange={(event) => setHourlyRate(event.target.value)} required />
+        <EditorField label="Hourly rate (optional)" error={fields.hourlyRate}>
+          <select
+            className={fieldClass}
+            value={hourlyRate}
+            onChange={(event) => {
+              const next = event.target.value
+              setHourlyRate(next)
+              if ((rateOptions as readonly number[]).map(String).includes(next)) setCurrency('ILS')
+            }}
+          >
+            <option value="">Not set</option>
+            {withCurrent(
+              rateOptions.map((amount) => ({ value: String(amount), label: `₪${amount}` })),
+              hourlyRate,
+            ).map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </EditorField>
         <EditorField label="Currency" error={fields.currency}>
           <select className={fieldClass} value={currency} onChange={(event) => setCurrency(event.target.value)}>
@@ -468,7 +582,7 @@ function EditForm({
       </fieldset>
       <div className="mt-4 grid gap-4">
         <EditorField label="Portfolio sample or link" error={fields.portfolio || serverFields.portfolio}>
-          <input className={fieldClass} value={portfolio} onChange={(event) => setPortfolio(event.target.value)} required />
+          <input className={fieldClass} value={portfolio} onChange={(event) => setPortfolio(event.target.value)} />
         </EditorField>
         <EditorField label="Another sample or link" error={fields.portfolio2 || serverFields.portfolio2}>
           <input className={fieldClass} value={portfolio2} onChange={(event) => setPortfolio2(event.target.value)} />

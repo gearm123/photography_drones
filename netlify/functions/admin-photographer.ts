@@ -102,7 +102,7 @@ export default async function handler(req: Request): Promise<Response> {
           currency = ${lead.value.currency},
           specialties = ${lead.value.specialties},
           specialization = ${lead.value.specialization},
-          portfolio_urls = ${lead.value.portfolioUrls},
+          portfolio_urls = ${lead.value.portfolioUrls.length > 0 ? lead.value.portfolioUrls : null},
           portfolio_url = ${lead.value.portfolioUrl}
         WHERE id = ${id}
         RETURNING id, name, email, phone, location, equipment, experience, availability, working_areas,

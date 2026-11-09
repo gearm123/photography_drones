@@ -7,12 +7,12 @@ export type PublicPhotographer = {
   workingAreas: string
   specialties: ServiceTier[]
   hourlyRateCents: number | null
-  currency: 'USD' | 'EUR' | 'GBP' | null
+  currency: 'USD' | 'EUR' | 'GBP' | 'ILS' | null
   portfolioUrls: string[]
 }
 
 const serviceValues = new Set<string>(serviceOptions.map((option) => option.value))
-const currencies = new Set(['USD', 'EUR', 'GBP'])
+const currencies = new Set(['USD', 'EUR', 'GBP', 'ILS'])
 
 export function isServiceTier(value: string): value is ServiceTier {
   return serviceValues.has(value)
@@ -42,7 +42,7 @@ export function profileVisibility(lead: {
 
   const cents = Number(lead.hourlyRateCents)
   const hourlyRateCents = Number.isInteger(cents) && cents >= 100 && cents <= 1_000_000 ? cents : null
-  const currency = currencies.has(lead.currency) ? (lead.currency as 'USD' | 'EUR' | 'GBP') : null
+  const currency = currencies.has(lead.currency) ? (lead.currency as PublicPhotographer['currency']) : null
 
   return {
     publish: true,
@@ -69,7 +69,7 @@ export function toPublicPhotographer(row: Record<string, unknown>): PublicPhotog
   if (!name || !location || !workingAreas || specialties.length === 0) return null
   const cents = integer(row.hourly_rate_cents)
   const currency = text(row.currency)
-  const validCurrency = currencies.has(currency) ? (currency as 'USD' | 'EUR' | 'GBP') : null
+  const validCurrency = currencies.has(currency) ? (currency as PublicPhotographer['currency']) : null
   return {
     id: text(row.photographer_id),
     name,

@@ -71,7 +71,7 @@ export default async function handler(req: Request): Promise<Response> {
         ${lead.value.hourlyRateCents},
         ${lead.value.currency},
         ${lead.value.specialties},
-        ${lead.value.portfolioUrls},
+        ${lead.value.portfolioUrls.length > 0 ? lead.value.portfolioUrls : null},
         'pending'
       )
       RETURNING id, name, email, phone, location, equipment, experience, availability, working_areas,
