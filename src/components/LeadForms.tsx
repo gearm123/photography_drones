@@ -149,6 +149,7 @@ function PhotographerForm() {
   const [specialties, setSpecialties] = useState<string[]>([])
   const [portfolio, setPortfolio] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
+  const alertRef = useRef<HTMLDivElement>(null)
 
   function toggleSpecialty(value: string) {
     setSpecialties((current) =>
@@ -206,9 +207,41 @@ function PhotographerForm() {
     )
   }
 
+  useEffect(() => {
+    if (lead.status !== 'error') return
+    alertRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+  }, [lead.status, lead.formError, lead.fieldErrors])
+
   const quiet = 'text-foam/75'
-  const errorTone = 'text-[#f6cfc2]'
+  const errorTone = 'text-base font-semibold text-[#ffd7cc]'
   const show = (message?: string) => translateError(t.errors, message)
+  const controlClass = (invalid: boolean) =>
+    invalid
+      ? 'mt-2 w-full rounded-2xl border-2 border-[#ff8f73] bg-[#fff4f0] px-4 py-3 text-base text-ink outline-none ring-2 ring-[#ff8f73]'
+      : fieldClass
+  const fieldLabel = (key: string) => {
+    const labels: Record<string, string> = {
+      name: t.leads.name,
+      email: t.leads.email,
+      phone: t.leads.phone,
+      location: t.leads.location,
+      specialties: t.leads.specialties,
+      workingAreas: t.leads.areas,
+      equipment: t.leads.equipment,
+      experience: t.leads.experience,
+      availability: t.leads.availability,
+      hourlyRate: t.leads.rate,
+      currency: t.leads.currency,
+      portfolio: t.leads.portfolio,
+      portfolio2: t.leads.portfolioMore,
+      portfolio3: t.leads.portfolioMore,
+    }
+    return labels[key] ?? key
+  }
+  const problems = Object.entries(lead.fieldErrors).flatMap(([key, message]) =>
+    message ? [{ key, label: fieldLabel(key), message: show(message) ?? message }] : [],
+  )
   const cityName = (value: string) => (value in t.leads.cityNames ? t.leads.cityNames[value as IsraelCity] : value)
   const thanks = fill(t.leads.success, { name: name.trim(), location: cityName(location) })
 
@@ -224,6 +257,25 @@ function PhotographerForm() {
       ) : (
         <form ref={formRef} className="relative mt-8 space-y-5" onSubmit={onSubmit} noValidate>
           <Honeypot formId={formId} />
+          {lead.status === 'error' ? (
+            <div ref={alertRef} role="alert" className="rounded-2xl border-2 border-[#ff8f73] bg-[#4a2420] px-4 py-4 text-[#ffe8e1]">
+              <p className="text-lg font-semibold">{t.leads.couldNotSave}</p>
+              {problems.length > 0 ? (
+                <>
+                  <p className="mt-2 text-sm">{t.leads.fixThese}</p>
+                  <ul className="mt-2 list-disc space-y-1 ps-5 text-base">
+                    {problems.map((problem) => (
+                      <li key={problem.key}>
+                        <span className="font-semibold">{problem.label}:</span> {problem.message}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p className="mt-2 text-base">{show(lead.formError)}</p>
+              )}
+            </div>
+          ) : null}
           <Field id={`${formId}-name`} label={t.leads.name} error={show(lead.fieldErrors.name)} errorClassName={errorTone}>
             <input
               id={`${formId}-name`}
@@ -231,7 +283,7 @@ function PhotographerForm() {
               autoComplete="name"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              className={fieldClass}
+              className={controlClass(Boolean(lead.fieldErrors.name))}
               aria-invalid={Boolean(lead.fieldErrors.name)}
               aria-describedby={lead.fieldErrors.name ? `${formId}-name-error` : undefined}
               required
@@ -246,7 +298,7 @@ function PhotographerForm() {
               inputMode="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className={fieldClass}
+              className={controlClass(Boolean(lead.fieldErrors.email))}
               aria-invalid={Boolean(lead.fieldErrors.email)}
               aria-describedby={lead.fieldErrors.email ? `${formId}-email-error` : undefined}
               required
@@ -267,7 +319,7 @@ function PhotographerForm() {
               placeholder={t.leads.phonePlaceholder}
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
-              className={fieldClass}
+              className={controlClass(Boolean(lead.fieldErrors.phone))}
               aria-invalid={Boolean(lead.fieldErrors.phone)}
               aria-describedby={lead.fieldErrors.phone ? `${formId}-phone-error` : undefined}
               required
@@ -279,7 +331,7 @@ function PhotographerForm() {
               name="location"
               value={location}
               onChange={(event) => setLocation(event.target.value)}
-              className={fieldClass}
+              className={controlClass(Boolean(lead.fieldErrors.location))}
               aria-invalid={Boolean(lead.fieldErrors.location)}
               aria-describedby={lead.fieldErrors.location ? `${formId}-location-error` : undefined}
               required
@@ -292,7 +344,11 @@ function PhotographerForm() {
               ))}
             </select>
           </Field>
-          <fieldset aria-describedby={lead.fieldErrors.specialties ? `${formId}-specialties-error` : undefined}>
+          <fieldset
+            aria-invalid={Boolean(lead.fieldErrors.specialties)}
+            aria-describedby={lead.fieldErrors.specialties ? `${formId}-specialties-error` : undefined}
+            className={lead.fieldErrors.specialties ? 'rounded-2xl border-2 border-[#ff8f73] p-3' : undefined}
+          >
             <legend className="text-sm font-medium">{t.leads.specialties}</legend>
             <div className="mt-2 grid gap-2 sm:grid-cols-2">
               {serviceOptions.map((option) => (
@@ -400,11 +456,6 @@ function PhotographerForm() {
               aria-describedby={lead.fieldErrors.portfolio ? `${formId}-portfolio-error` : undefined}
             />
           </Field>
-          {lead.formError ? (
-            <p role="alert" className="text-sm text-[#f3c7b6]">
-              {show(lead.formError)}
-            </p>
-          ) : null}
           <button
             type="submit"
             className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-foam px-6 text-base font-medium text-ink hover:bg-sand disabled:opacity-60 sm:w-auto"

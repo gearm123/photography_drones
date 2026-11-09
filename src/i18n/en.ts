@@ -302,6 +302,8 @@ export const en = {
     submit: 'Join Our Photographer Network',
     noscript: 'JavaScript is required to send this form. Email hello@tripframe.com instead.',
     checkFields: 'Check the highlighted fields.',
+    couldNotSave: 'This application was not saved.',
+    fixThese: 'Fix these, then send it again:',
   },
   footer: {
     blurb:

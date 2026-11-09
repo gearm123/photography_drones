@@ -1,11 +1,3 @@
-import {
-  availabilityOptions,
-  equipmentOptions,
-  experienceOptions,
-  isIsraelCity,
-  rateOptions,
-} from './photographerChoices.ts'
-
 export const serviceOptions = [
   { value: 'mobile', label: 'Mobile Photography' },
   { value: 'professional', label: 'Professional Photography' },
@@ -98,25 +90,20 @@ export function normalizePhone(value: string): { error?: string; value: string }
   let compact = value.trim().replace(/[\s().-]/g, '')
   if (compact.startsWith('00')) compact = `+${compact.slice(2)}`
   if (/^0[2-9]\d{7,8}$/.test(compact)) compact = `+972${compact.slice(1)}`
+  if (/^5\d{8}$/.test(compact)) compact = `+972${compact}`
   if (/^972\d{8,9}$/.test(compact)) compact = `+${compact}`
-  if (!/^\+[1-9]\d{7,14}$/.test(compact)) {
-    return { error: 'Enter a WhatsApp number, like +972 50 123 4567.', value: '' }
-  }
-  return { value: compact }
+  if (/^\+[1-9]\d{7,14}$/.test(compact)) return { value: compact }
+  const loose = compact.replace(/[^\d+]/g, '')
+  if (loose.length >= 9 && loose.length <= 16) return { value: loose }
+  return { error: 'Enter a WhatsApp number, like +972 50 123 4567.', value: '' }
 }
 
-function checkRate(value: string, legacy?: string): { error?: string; cents: number | null } {
+function checkRate(value: string): { cents: number | null } {
   const raw = value.trim()
-  if (!raw) return { cents: null }
-  const listed = (rateOptions as readonly number[]).map(String).includes(raw)
-  const kept = Boolean(legacy && raw === legacy.trim())
-  if (!listed && !kept) return { error: 'Choose an option from the list.', cents: null }
-  if (!/^\d{1,5}(\.\d{1,2})?$/.test(raw)) return { error: 'Choose an option from the list.', cents: null }
+  if (!/^\d{1,5}(\.\d{1,2})?$/.test(raw)) return { cents: null }
   const [whole, fraction = ''] = raw.split('.')
   const cents = Number(whole) * 100 + Number(`${fraction}00`.slice(0, 2))
-  if (!Number.isSafeInteger(cents) || cents < 100 || cents > 1_000_000) {
-    return { error: 'Enter an hourly rate between 1 and 10,000.', cents: null }
-  }
+  if (!Number.isSafeInteger(cents) || cents < 100 || cents > 1_000_000) return { cents: null }
   return { cents }
 }
 
@@ -131,29 +118,16 @@ function checkSpecialties(values: string[]): { error?: string; value: ServiceTie
   return { value: unique }
 }
 
-function checkPortfolios(values: string[]): { fields: FieldErrors; value: string[] } {
-  const filled = values
-    .map((value, index) => ({ index, raw: value }))
-    .filter((item) => item.raw.trim())
-  if (filled.length === 0) return { fields: {}, value: [] }
-  if (filled.length > 3) return { fields: { portfolio: 'Add up to 3 links.' }, value: [] }
-
+function checkPortfolios(values: string[]): { value: string[] } {
   const urls: string[] = []
-  const fields: FieldErrors = {}
-  for (const item of filled) {
-    const key = item.index === 0 ? 'portfolio' : `portfolio${item.index + 1}`
-    const normalized = normalizePortfolio(item.raw)
-    if (normalized.error || !normalized.value) {
-      fields[key] = normalized.error ?? 'Enter a valid portfolio or Instagram link.'
-      continue
-    }
-    if (urls.includes(normalized.value)) {
-      fields[key] = 'That link is already listed.'
-      continue
-    }
-    urls.push(normalized.value)
+  for (const raw of values) {
+    const trimmed = raw.trim()
+    if (!trimmed || urls.length >= 3) continue
+    const normalized = normalizePortfolio(trimmed)
+    const saved = normalized.value ?? trimmed.replace(/[<>]/g, '').slice(0, 300)
+    if (saved.length >= 2 && !urls.includes(saved)) urls.push(saved)
   }
-  return { fields, value: urls }
+  return { value: urls }
 }
 
 export function normalizePortfolio(value: string): { error?: string; value: string | null } {
@@ -223,38 +197,23 @@ type PhotographerLegacy = {
   hourlyRate?: string
 }
 
-function checkCity(value: string, legacy?: string): { error?: string; value: string } {
-  const city = collapse(value)
-  if (isIsraelCity(city) || (legacy && city === collapse(legacy) && city.length >= 2 && city.length <= 120)) {
-    return { value: city }
-  }
+function clipText(value: string, max: number): string {
+  return collapse(value).replace(/[<>]/g, '').slice(0, max)
+}
+
+function keepOptional(value: string, max: number): string | null {
+  const text = clipText(value, max)
+  return text.length >= 2 ? text : null
+}
+
+function checkCity(value: string): { error?: string; value: string } {
+  const city = clipText(value, 120)
+  if (city.length >= 2) return { value: city }
   return { error: 'Choose a city in Israel.', value: '' }
 }
 
-function checkChoice(
-  value: string,
-  allowed: readonly string[],
-  legacy?: string,
-): { error?: string; value: string | null } {
-  const text = collapse(value)
-  if (!text) return { value: null }
-  if (allowed.includes(text) || (legacy && text === collapse(legacy))) return { value: text }
-  return { error: 'Choose an option from the list.', value: null }
-}
-
-function checkWorkingAreas(
-  value: string,
-  location: string,
-  legacy?: string,
-): { error?: string; value: string } {
-  const text = collapse(value)
-  if (!text) return { value: location }
-  if (legacy && text === collapse(legacy)) return { value: text }
-  const parts = [...new Set(text.split(',').map((part) => part.trim()).filter(Boolean))]
-  if (parts.length === 0 || !parts.every(isIsraelCity)) return { error: 'Choose a city in Israel.', value: '' }
-  const joined = parts.join(', ')
-  if (joined.length > 800) return { error: 'Select fewer cities.', value: '' }
-  return { value: joined }
+function checkWorkingAreas(value: string, location: string): { value: string } {
+  return { value: keepOptional(value, 800) ?? location }
 }
 
 export function validatePhotographer(
@@ -278,32 +237,21 @@ export function validatePhotographer(
   const name = checkName(input.name)
   const email = checkEmail(input.email)
   const phone = normalizePhone(input.phone)
-  const location = checkCity(input.location, legacy.location)
-  const equipment = checkChoice(input.equipment, equipmentOptions.map((option) => option.value), legacy.equipment)
-  const experience = checkChoice(input.experience, experienceOptions.map((option) => option.value), legacy.experience)
-  const availability = checkChoice(
-    input.availability,
-    availabilityOptions.map((option) => option.value),
-    legacy.availability,
-  )
-  const workingAreas = checkWorkingAreas(input.workingAreas, location.value, legacy.workingAreas)
-  const rate = checkRate(input.hourlyRate, legacy.hourlyRate)
+  const location = checkCity(input.location || legacy.location || '')
+  const equipment = { value: keepOptional(input.equipment || legacy.equipment || '', 400) }
+  const experience = { value: keepOptional(input.experience || legacy.experience || '', 300) }
+  const availability = { value: keepOptional(input.availability || legacy.availability || '', 300) }
+  const workingAreas = checkWorkingAreas(input.workingAreas || legacy.workingAreas || '', location.value)
+  const rate = checkRate(input.hourlyRate || legacy.hourlyRate || '')
   const specialties = checkSpecialties(input.specialties)
   const portfolios = checkPortfolios(input.portfolios)
-  const currency = rate.cents == null ? null : isCurrency(input.currency) ? input.currency : null
+  const currency = rate.cents == null ? null : isCurrency(input.currency) ? input.currency : 'ILS'
 
   if (name.error) fields.name = name.error
   if (email.error) fields.email = email.error
   if (phone.error) fields.phone = phone.error
   if (location.error) fields.location = location.error
-  if (equipment.error) fields.equipment = equipment.error
-  if (experience.error) fields.experience = experience.error
-  if (availability.error) fields.availability = availability.error
-  if (workingAreas.error) fields.workingAreas = workingAreas.error
-  if (rate.error) fields.hourlyRate = rate.error
-  if (rate.cents != null && !currency) fields.currency = 'Select a currency.'
   if (specialties.error) fields.specialties = specialties.error
-  Object.assign(fields, portfolios.fields)
 
   if (Object.keys(fields).length > 0 || specialties.value.length === 0) {
     return { ok: false, fields }

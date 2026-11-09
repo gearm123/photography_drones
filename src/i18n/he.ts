@@ -290,6 +290,8 @@ export const he: Copy = {
     submit: 'הצטרפות לרשת הצלמים',
     noscript: 'צריך JavaScript כדי לשלוח את הטופס. אפשר לכתוב אל hello@tripframe.com.',
     checkFields: 'בדקו את השדות המסומנים.',
+    couldNotSave: 'הבקשה לא נשמרה.',
+    fixThese: 'תקנו את זה ושלחו שוב:',
   },
   footer: {
     blurb: 'מטיילים מוצאים צלם באפליקציות Tripframe. צלמים מגישים מועמדות באתר. ההזמנות עדיין לא פעילות.',

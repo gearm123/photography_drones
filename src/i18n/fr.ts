@@ -316,6 +316,8 @@ export const fr: Copy = {
     submit: 'Rejoindre le réseau de photographes',
     noscript: 'JavaScript est nécessaire pour envoyer ce formulaire. Écrivez à hello@tripframe.com.',
     checkFields: 'Vérifiez les champs indiqués.',
+    couldNotSave: 'Cette candidature n’a pas été enregistrée.',
+    fixThese: 'Corrigez ceci, puis envoyez à nouveau :',
   },
   footer: {
     blurb:
