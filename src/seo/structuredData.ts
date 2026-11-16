@@ -1,5 +1,3 @@
-import { commissionPercent, photographerPercent } from '../content/photographerOffer.ts'
-import { fill } from '../i18n/locale.ts'
 import { translations } from '../i18n/translations.ts'
 import type { Locale } from '../i18n/types.ts'
 import { SITE_NAME, SITE_ORIGIN, SUPPORT_EMAIL, localeUrl } from './site.ts'
@@ -16,7 +14,7 @@ const websiteId = `${SITE_ORIGIN}/#website`
 export function homeStructuredData(locale: Locale) {
   const t = translations[locale]
   const pageUrl = localeUrl(locale)
-  const serviceKeys = ['mobile', 'professional', 'drone', 'hotels'] as const
+  const serviceKeys = ['mobile', 'professional', 'drone', 'hotels', 'sports', 'events'] as const
 
   return {
     '@context': 'https://schema.org',
@@ -98,7 +96,7 @@ export function homeStructuredData(locale: Locale) {
         serviceType: 'Travel photography',
         provider: { '@id': organizationId },
         areaServed: CITIES,
-        description: fill(t.program.keepHeading, { keep: photographerPercent, commission: commissionPercent }),
+        description: t.services.intro,
       },
       {
         '@type': 'FAQPage',

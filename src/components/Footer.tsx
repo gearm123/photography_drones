@@ -7,7 +7,7 @@ export function Footer() {
   const { t } = useLanguage()
   const links = [
     { href: '#why-join', label: t.footer.whyJoin },
-    { href: '#pay', label: t.footer.pay },
+    { href: '#services', label: t.footer.partners },
     { href: '#launch', label: t.footer.cities },
     { href: '#onboarding', label: t.footer.onboarding },
     { href: '#faq', label: t.footer.faq },

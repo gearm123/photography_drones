@@ -1,12 +1,11 @@
-import { appsAreLive, commissionPercent, photographerPercent, supportEmail } from '../content/photographerOffer.ts'
+import { appsAreLive, supportEmail } from '../content/photographerOffer.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 import { serviceOptions } from '../lib/leadRules.ts'
 import { AppDownloads } from './AppDownloads.tsx'
 import { Eyebrow, Reveal } from './Reveal.tsx'
 
 export function PhotographerProgram() {
-  const { t, fill } = useLanguage()
-  const share = { keep: photographerPercent, commission: commissionPercent }
+  const { t } = useLanguage()
   const steps = [
     ...t.program.steps,
     {
@@ -30,36 +29,11 @@ export function PhotographerProgram() {
           ))}
         </ul>
 
-        <div id="pay" className="mt-20 scroll-mt-28">
-          <Eyebrow>{t.program.payEyebrow}</Eyebrow>
-          <h2 className="mt-4 max-w-3xl text-4xl sm:text-5xl">{fill(t.program.keepHeading, share)}</h2>
-          <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="space-y-4 text-muted">
-              <p>{fill(t.program.payBody, share)}</p>
-              <p>{t.program.payBody2}</p>
-            </div>
-            <aside className="rounded-[1.4rem] bg-ink p-6 text-foam">
-              <p className="text-xs font-medium tracking-[0.16em] text-foam/60 uppercase">{t.program.example}</p>
-              <p className="mt-4 font-display text-3xl">{t.program.session}</p>
-              <p className="mt-3 text-sm text-foam/80">{t.program.sessionDetail}</p>
-              <dl className="mt-6 space-y-3 text-sm">
-                <div className="flex justify-between gap-4">
-                  <dt>{fill(t.program.tripframeShare, share)}</dt>
-                  <dd>{t.program.tripframeAmount}</dd>
-                </div>
-                <div className="flex justify-between gap-4 border-t border-white/15 pt-3 text-base">
-                  <dt>{fill(t.program.youReceive, share)}</dt>
-                  <dd>{t.program.youAmount}</dd>
-                </div>
-              </dl>
-            </aside>
-          </div>
-        </div>
-
         <div id="launch" className="mt-20 scroll-mt-28">
           <Eyebrow>{t.program.launchEyebrow}</Eyebrow>
           <h2 className="mt-4 max-w-3xl text-4xl sm:text-5xl">{t.program.launchTitle}</h2>
           <p className="mt-5 max-w-2xl text-muted">{t.program.launchIntro}</p>
+          <p className="mt-3 max-w-2xl text-muted">{t.program.eventsNote}</p>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             <div>
               <h3 className="text-2xl">{t.program.locationsTitle}</h3>

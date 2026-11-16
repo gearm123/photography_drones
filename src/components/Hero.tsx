@@ -33,7 +33,7 @@ export function Hero() {
           height={1200}
           alt={t.hero.imageAlt}
           decoding="async"
-          className="h-full w-full object-cover object-[center_62%]"
+          className="h-full w-full object-cover object-[center_42%]"
         />
       </div>
     </section>

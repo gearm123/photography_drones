@@ -2,7 +2,7 @@ export const en = {
   meta: {
     title: 'Tripframe — Your Trip Deserves More Than Selfies',
     description:
-      'Photographers apply to Tripframe on the web. Travelers find a local photographer in the iPhone and Android apps.',
+      'Families book a local photographer in the Tripframe apps. Hotels, sports, and commercial events use the same network. Photographers apply on this site.',
   },
   lang: {
     groupAria: 'Language selection',
@@ -30,12 +30,12 @@ export const en = {
     eyebrow: 'Early access · On-demand travel photography',
     title: 'Your Trip Deserves More Than Selfies.',
     subtitle:
-      'Find local photographers wherever you travel. From spontaneous snapshots to professional shoots, capture your best moments effortlessly.',
+      'A local photographer for the family you travel with. Parents, kids, and the moments that never fit in a selfie.',
     join: 'Join as a Photographer',
     appsLive: 'Travelers find a photographer in the Tripframe apps.',
     appsSoon:
       'Travelers find a photographer in the Tripframe apps. The apps are still being built, so these buttons stay on this page.',
-    imageAlt: 'A photographer taking a picture of a traveler in Cappadocia, with hot air balloons overhead',
+    imageAlt: 'A photographer taking a picture of a family of four on a sunny coastal path',
   },
   stores: {
     iphone: 'Download for iPhone',
@@ -51,23 +51,24 @@ export const en = {
     intro: 'Travelers use the mobile apps. Photographers apply on this website while the apps are still being built.',
     steps: [
       { title: 'Get the Tripframe app.', body: 'Travelers find a photographer on iPhone or Android. The apps are still being built.' },
-      { title: 'Choose the shoot.', body: 'In the app, pick a destination and mobile, professional, drone, or hotel photography.' },
+      { title: 'Choose the shoot.', body: 'In the app, pick a destination. Sessions cover families and travel, hotels, sports, and commercial events, shot on a phone, a camera, or a drone.' },
       { title: 'Meet a local photographer.', body: 'When booking opens, the introduction happens in the app, not on this website.' },
     ],
   },
   services: {
     eyebrow: 'Photography services',
     title: 'A photographer for the kind of trip you are actually on.',
-    intro: 'These are the shoots travelers will request in the app.',
+    intro:
+      'Travelers book a photographer for the trip they are on. Hotels, sports events, and other commercial events book the same network.',
     items: {
       mobile: {
         title: 'Mobile Photography',
-        body: 'Affordable travel photos, social media content, and spontaneous sessions.',
+        body: 'Travel photos, social posts, and a short session that starts when you are already out.',
         alt: 'A traveler with a backpack walking through a narrow city street',
       },
       professional: {
         title: 'Professional Photography',
-        body: 'DSLR photography, portraits, couples, families, and edited photos.',
+        body: 'Camera portraits of families, couples, and the people on the trip, with edited photos.',
         alt: 'A couple photographed outdoors in warm evening light',
       },
       drone: {
@@ -77,8 +78,18 @@ export const en = {
       },
       hotels: {
         title: 'Hotels & Resorts',
-        body: 'Photography services arranged through participating hotels and resorts.',
+        body: 'Hotels and resorts can offer a photographer to guests and book photos of the stay, the property, and the pool.',
         alt: 'A resort pool at dusk beside a lit pavilion and lounge chairs',
+      },
+      sports: {
+        title: 'Sports Events',
+        body: 'Match days, races, tournaments, and fan moments. Clubs, venues, and organizers can put a photographer on the ground.',
+        alt: 'A photographer at the sideline of a local football match, with families watching from the steps',
+      },
+      events: {
+        title: 'Commercial Events',
+        body: 'Weddings, conferences, festivals, concerts, brand launches, corporate gatherings, restaurants, and venues that want a photographer on site.',
+        alt: 'A photographer taking pictures of guests at an evening event in a lit courtyard',
       },
     },
   },
@@ -92,22 +103,22 @@ export const en = {
       { title: 'Convenience', body: 'One request instead of hotel desks, group chats, and hopeful DMs.' },
       { title: 'Flexibility', body: 'A spontaneous walk or a session you plan before you land.' },
       { title: 'Local expertise', body: 'Photographers who know the light, the streets, and where to stand.' },
-      { title: 'Every budget', body: 'From a phone session to a drone flight and a fully edited portrait set.' },
+      { title: 'Events too', body: 'The same photographers cover hotels, sports, weddings, conferences, festivals, and other commercial events.' },
     ],
   },
   program: {
     eyebrow: 'For photographers',
     title: 'Why photographers join Tripframe.',
     intro:
-      'Apply if you already photograph in our launch cities. Travelers will request you in the app. You are not asked to bring your own clients.',
+      'You do not need a studio or a long client list. If you have some experience and the motivation to take the work, you can join the community and get shoots. Travelers, hotels, and events request photographers in the app. You are not asked to bring your own clients.',
     reasons: [
       {
-        title: 'Travelers request you',
-        body: 'People looking for a photographer use the Tripframe apps. You are not chasing hotel desks, group chats, or hopeful messages.',
+        title: 'The work comes to you',
+        body: 'Travelers, hotels, sports events, and commercial events request a photographer in the Tripframe apps. You are not chasing desks, group chats, or hopeful messages.',
       },
       {
-        title: 'You set the hourly rate',
-        body: 'The rate on your application is the price the traveler pays. Tripframe does not invent a second rate after you are approved.',
+        title: 'Experience is enough',
+        body: 'You do not have to be a full-time professional. People with real experience and the motivation to show up can join and get work.',
       },
       {
         title: 'You work your own cities',
@@ -118,22 +129,11 @@ export const en = {
         body: 'The samples you submit are what an approved profile shows. Your email, WhatsApp number, and private notes stay off that profile.',
       },
     ],
-    payEyebrow: 'Pay',
-    keepHeading: 'You keep {keep}%. Tripframe keeps {commission}%.',
-    payBody:
-      'The hourly rate on your application is what the traveler pays. Tripframe’s commission is {commission}% of that booked session. You receive the other {keep}% after the session is complete.',
-    payBody2:
-      'Commission is taken from the traveler’s price. It is not added on top of your rate. There is no fee to apply and no monthly charge. This website does not take payment and does not pay photographers. Payouts start only when booking opens in the app.',
-    example: 'Example',
-    session: '€150 session',
-    sessionDetail: 'Two hours at your €75 rate.',
-    tripframeShare: 'Tripframe, {commission}%',
-    youReceive: 'You receive, {keep}%',
-    tripframeAmount: '€30',
-    youAmount: '€120',
     launchEyebrow: 'Launch',
     launchTitle: 'First cities, and the specialties we list.',
     launchIntro: 'Apply if you can work in at least one of these places. Choose every specialty you are ready to shoot.',
+    eventsNote:
+      'Hotels, sports events, weddings, conferences, festivals, concerts, brand launches, corporate gatherings, restaurants, and venues book through the same network.',
     locationsTitle: 'Initial locations',
     specialtiesTitle: 'Specialties',
     cities: ['Tel Aviv', 'Jerusalem', 'Haifa', 'Eilat', 'Galilee'],
@@ -150,7 +150,7 @@ export const en = {
       },
       {
         title: 'Your public profile is prepared',
-        body: 'Approval publishes your name, location, working areas, specialties, rate, and portfolio. Contact details and vetting notes stay private.',
+        body: 'Approval publishes your name, location, working areas, specialties, and portfolio. Contact details and vetting notes stay private.',
       },
     ],
     stepLiveTitle: 'Download the app',
@@ -164,26 +164,26 @@ export const en = {
       {
         question: 'Why should I join?',
         answer:
-          'Travelers will look for a local photographer in the Tripframe apps instead of asking around after they land. You choose your cities, your specialties, and your hourly rate, and you apply once on this website.',
+          'Travelers, hotels, and event organizers will look for a photographer in the Tripframe apps. You do not need to be a celebrated photographer. Some experience and the motivation to work are enough. You choose your cities and specialties, and you apply once on this website.',
       },
       {
         question: 'What does it cost to apply?',
         answer: 'Nothing. There is no application fee and no subscription. This website does not ask for a payment card.',
       },
       {
-        question: 'How does commission work?',
+        question: 'Who can join?',
         answer:
-          'Tripframe keeps 20% of the session the traveler pays. You receive 80%. A two-hour session at €75 is €150. Tripframe keeps €30 and you receive €120. The rate you propose is the traveler’s price, not a rate with commission added on top.',
+          'Anyone with some experience and the motivation to take the work. You do not need a famous portfolio or years as a full-time photographer. A phone, a camera, or a drone is enough to apply. Tripframe reviews every application.',
       },
       {
         question: 'When am I paid?',
         answer:
-          'After a completed booking in the app. Booking and payouts are not live yet, so submitting an application does not create a payment. You will not be paid for applying.',
+          'Booking is not live yet, and session rates are not set. Submitting an application does not create a payment. You will not be paid for applying.',
       },
       {
         question: 'Where is the first launch?',
         answer:
-          'The first photographer network is in Israel, starting with Tel Aviv, Jerusalem, Haifa, Eilat, and the Galilee. The shoots we list are mobile photography, professional photography, drone photography, and hotels and resorts.',
+          'The first photographer network is in Israel, starting with Tel Aviv, Jerusalem, Haifa, Eilat, and the Galilee. The work covers mobile, professional, and drone photography for travelers, plus hotels and resorts, sports events, and commercial events such as weddings, conferences, festivals, concerts, brand launches, and corporate gatherings.',
       },
       {
         question: 'Can a traveler book me on this website?',
@@ -192,13 +192,13 @@ export const en = {
       {
         question: 'Who do I contact?',
         answer:
-          'Email hello@tripframe.com from the address on your application and include your name. We can help with the application, an approval, or a question about pay. There is no phone support line.',
+          'Email hello@tripframe.com from the address on your application and include your name. We can help with the application or an approval. There is no phone support line.',
       },
     ],
     supportEyebrow: 'Support',
     supportTitle: 'Contact us, and get the app when it launches.',
     supportBody:
-      'Email us about an application, an approval, or how pay will work. Write from the email address on your application and include your name.',
+      'Email us about an application or an approval. Write from the email address on your application and include your name.',
     noPhone: 'There is no phone support line.',
     supportSubject: 'Photographer support',
     appsTitle: 'iPhone and Android',
@@ -210,15 +210,14 @@ export const en = {
   leads: {
     eyebrow: 'Early access',
     title: 'Photographers apply here.',
-    intro: 'This website registers photographers only.',
-    payLink: 'Read the pay terms',
-    introAfter: 'before you apply. Travelers find a photographer in the Tripframe apps for iPhone and Android. Those apps are still being built.',
+    intro:
+      'This website registers photographers only. Some experience and the motivation to work are enough to apply. Travelers, hotels, and events find a photographer in the Tripframe apps for iPhone and Android. Those apps are still being built.',
     travelersTitle: 'For travelers',
     travelersBody:
       'Find a photographer in the Tripframe app. There is no traveler sign-up on this website. The iPhone and Android apps are still being built, so the buttons below do not open a store.',
     formTitle: 'For photographers',
     formBody:
-      'Name, email, WhatsApp, your city in Israel, and the photography you offer are required. Everything else is optional. Every application is saved as pending.',
+      'Name, email, WhatsApp, your city in Israel, and the photography you offer are required. You do not need to be a full-time photographer. Everything else is optional. Every application is saved as pending.',
     received: 'Application received.',
     success: 'Thanks, {name}. Your application for {location} is saved as Pending.',
     name: 'Name',
@@ -307,11 +306,11 @@ export const en = {
   },
   footer: {
     blurb:
-      'Travelers find a photographer in the Tripframe apps. Photographers apply on this website. Booking is not live yet.',
+      'Families and events find a photographer in the Tripframe apps. Photographers apply on this website. Booking is not live yet.',
     explore: 'Explore',
     nav: 'Footer',
     whyJoin: 'Why join',
-    pay: 'Pay and commission',
+    partners: 'Hotels and events',
     cities: 'Launch cities',
     onboarding: 'Onboarding',
     faq: 'FAQ',
@@ -324,7 +323,7 @@ export const en = {
     getApp: 'Get the app',
     appsLive: 'Download Tripframe for iPhone or Android.',
     appsSoon: 'The iPhone and Android apps are still being built.',
-    legal: '© 2026 Tripframe. Early-access product. Booking is not live yet. Photographs on this page are from Unsplash.',
+    legal: '© 2026 Tripframe. Early-access product. Booking is not live yet. Some photographs on this page are from Unsplash.',
   },
   errors: {
     'Enter your name.': 'Enter your name.',

@@ -4,7 +4,7 @@ export const fr: Copy = {
   meta: {
     title: 'Tripframe — Votre voyage mérite mieux que des selfies',
     description:
-      'Les photographes candidatent à Tripframe sur le site. Les voyageurs trouvent un photographe local dans les applications iPhone et Android.',
+      'Les familles réservent un photographe local dans les applications Tripframe. Hôtels, événements sportifs et événements commerciaux utilisent le même réseau. Les photographes candidatent sur ce site.',
   },
   lang: {
     groupAria: 'Choix de la langue',
@@ -32,12 +32,12 @@ export const fr: Copy = {
     eyebrow: 'Accès anticipé · Photo de voyage à la demande',
     title: 'Votre voyage mérite mieux que des selfies.',
     subtitle:
-      'Trouvez des photographes locaux partout où vous voyagez. Des clichés spontanés aux séances professionnelles, gardez vos meilleurs moments sans effort.',
+      'Un photographe local pour la famille avec qui vous voyagez. Parents, enfants, et les moments qui ne tiennent pas dans un selfie.',
     join: 'Rejoindre comme photographe',
     appsLive: 'Les voyageurs trouvent un photographe dans les applications Tripframe.',
     appsSoon:
       'Les voyageurs trouvent un photographe dans les applications Tripframe. Les applications sont encore en construction, donc ces boutons restent sur cette page.',
-    imageAlt: 'Un photographe photographie un voyageur en Cappadoce, avec des montgolfières au-dessus',
+    imageAlt: 'Une photographe prend en photo une famille de quatre personnes sur un chemin côtier ensoleillé',
   },
   stores: {
     iphone: 'Télécharger pour iPhone',
@@ -59,7 +59,7 @@ export const fr: Copy = {
       },
       {
         title: 'Choisir la séance.',
-        body: 'Dans l’application, choisissez une destination et la photo mobile, professionnelle, par drone ou d’hôtel.',
+        body: 'Dans l’application, choisissez une destination. Les séances couvrent les familles et le voyage, les hôtels, le sport et les événements commerciaux, au téléphone, à l’appareil ou par drone.',
       },
       {
         title: 'Rencontrer un photographe local.',
@@ -70,16 +70,17 @@ export const fr: Copy = {
   services: {
     eyebrow: 'Services photo',
     title: 'Un photographe pour le voyage que vous faites vraiment.',
-    intro: 'Ce sont les séances que les voyageurs demanderont dans l’application.',
+    intro:
+      'Les voyageurs réservent un photographe pour le voyage qu’ils font. Les hôtels, les événements sportifs et les autres événements commerciaux réservent le même réseau.',
     items: {
       mobile: {
         title: 'Photo mobile',
-        body: 'Photos de voyage accessibles, contenu pour les réseaux et séances spontanées.',
+        body: 'Photos de voyage, publications pour les réseaux et une courte séance qui commence quand vous êtes déjà dehors.',
         alt: 'Un voyageur avec un sac à dos dans une rue étroite',
       },
       professional: {
         title: 'Photo professionnelle',
-        body: 'Photo reflex, portraits, couples, familles et images retouchées.',
+        body: 'Portraits de familles, de couples et des personnes du voyage, pris à l’appareil et retouchés.',
         alt: 'Un couple photographié dehors dans une lumière de fin de journée',
       },
       drone: {
@@ -89,8 +90,18 @@ export const fr: Copy = {
       },
       hotels: {
         title: 'Hôtels et resorts',
-        body: 'Services photo organisés avec les hôtels et resorts participants.',
+        body: 'Les hôtels et resorts peuvent proposer un photographe aux clients et commander des photos du séjour, du lieu et de la piscine.',
         alt: 'Piscine de resort au crépuscule, près d’un pavillon éclairé',
+      },
+      sports: {
+        title: 'Événements sportifs',
+        body: 'Jours de match, courses, tournois et moments avec le public. Clubs, lieux et organisateurs peuvent avoir un photographe sur place.',
+        alt: 'Un photographe au bord d’un terrain pendant un match de football local, avec des familles dans les gradins',
+      },
+      events: {
+        title: 'Événements commerciaux',
+        body: 'Mariages, conférences, festivals, concerts, lancements de marque, réunions d’entreprise, restaurants et lieux qui veulent un photographe sur place.',
+        alt: 'Un photographe prend des photos d’invités lors d’une soirée dans une cour éclairée',
       },
     },
   },
@@ -104,22 +115,22 @@ export const fr: Copy = {
       { title: 'Simplicité', body: 'Une seule demande, au lieu de la réception, des groupes et des messages au hasard.' },
       { title: 'Souplesse', body: 'Une balade spontanée ou une séance prévue avant l’atterrissage.' },
       { title: 'Connaissance locale', body: 'Des photographes qui connaissent la lumière, les rues et où se placer.' },
-      { title: 'Tous les budgets', body: 'D’une séance au téléphone à un vol de drone et une série de portraits retouchés.' },
+      { title: 'Aussi les événements', body: 'Les mêmes photographes couvrent les hôtels, le sport, les mariages, les conférences, les festivals et d’autres événements commerciaux.' },
     ],
   },
   program: {
     eyebrow: 'Pour les photographes',
     title: 'Pourquoi les photographes rejoignent Tripframe.',
     intro:
-      'Candidatez si vous photographiez déjà dans nos villes de lancement. Les voyageurs vous demanderont dans l’application. On ne vous demande pas d’amener vos propres clients.',
+      'Pas besoin d’un studio ni d’une longue liste de clients. Avec un peu d’expérience et l’envie de prendre le travail, vous pouvez rejoindre la communauté et obtenir des séances. Voyageurs, hôtels et événements demandent un photographe dans l’application. On ne vous demande pas d’amener vos propres clients.',
     reasons: [
       {
-        title: 'Les voyageurs vous demandent',
-        body: 'Les personnes qui cherchent un photographe utilisent les applications Tripframe. Vous ne courez plus après les réceptions, les groupes ou les messages au hasard.',
+        title: 'Le travail vient à vous',
+        body: 'Voyageurs, hôtels, événements sportifs et événements commerciaux demandent un photographe dans les applications Tripframe. Vous ne courez plus après les réceptions, les groupes ou les messages au hasard.',
       },
       {
-        title: 'Vous fixez le tarif horaire',
-        body: 'Le tarif de votre candidature est le prix payé par le voyageur. Tripframe n’invente pas un second tarif après l’acceptation.',
+        title: 'L’expérience suffit',
+        body: 'Vous n’avez pas à être photographe à temps plein. Des personnes avec une vraie expérience et l’envie de se présenter peuvent rejoindre et obtenir du travail.',
       },
       {
         title: 'Vous travaillez dans vos villes',
@@ -130,22 +141,11 @@ export const fr: Copy = {
         body: 'Les exemples envoyés sont ce que montre un profil accepté. Votre e-mail, votre WhatsApp et vos notes privées n’y figurent pas.',
       },
     ],
-    payEyebrow: 'Rémunération',
-    keepHeading: 'Vous gardez {keep} %. Tripframe garde {commission} %.',
-    payBody:
-      'Le tarif horaire de votre candidature est ce que paie le voyageur. La commission de Tripframe est de {commission} % de cette séance réservée. Vous recevez les {keep} % restants une fois la séance terminée.',
-    payBody2:
-      'La commission est prélevée sur le prix du voyageur. Elle ne s’ajoute pas à votre tarif. Il n’y a pas de frais de candidature ni d’abonnement. Ce site n’encaisse pas et ne paie pas les photographes. Les versements commencent seulement quand la réservation ouvre dans l’application.',
-    example: 'Exemple',
-    session: 'Séance à 150 €',
-    sessionDetail: 'Deux heures à votre tarif de 75 €.',
-    tripframeShare: 'Tripframe, {commission} %',
-    youReceive: 'Vous recevez, {keep} %',
-    tripframeAmount: '30 €',
-    youAmount: '120 €',
     launchEyebrow: 'Lancement',
     launchTitle: 'Les premières villes, et les spécialités proposées.',
     launchIntro: 'Candidatez si vous pouvez travailler dans au moins un de ces lieux. Choisissez chaque spécialité que vous êtes prêt à photographier.',
+    eventsNote:
+      'Hôtels, événements sportifs, mariages, conférences, festivals, concerts, lancements de marque, réunions d’entreprise, restaurants et lieux réservent par le même réseau.',
     locationsTitle: 'Premiers lieux',
     specialtiesTitle: 'Spécialités',
     cities: ['Tel Aviv', 'Jérusalem', 'Haïfa', 'Eilat', 'Galilée'],
@@ -162,7 +162,7 @@ export const fr: Copy = {
       },
       {
         title: 'Votre profil public est préparé',
-        body: 'L’acceptation publie votre nom, votre lieu, vos zones, vos spécialités, votre tarif et votre portfolio. Les coordonnées et les notes d’examen restent privées.',
+        body: 'L’acceptation publie votre nom, votre lieu, vos zones, vos spécialités et votre portfolio. Les coordonnées et les notes d’examen restent privées.',
       },
     ],
     stepLiveTitle: 'Télécharger l’application',
@@ -176,26 +176,26 @@ export const fr: Copy = {
       {
         question: 'Pourquoi rejoindre ?',
         answer:
-          'Les voyageurs chercheront un photographe local dans les applications Tripframe au lieu de demander après l’atterrissage. Vous choisissez vos villes, vos spécialités et votre tarif horaire, et vous candidatez une fois sur ce site.',
+          'Voyageurs, hôtels et organisateurs chercheront un photographe dans les applications Tripframe. Vous n’avez pas besoin d’être un photographe connu. Un peu d’expérience et l’envie de travailler suffisent. Vous choisissez vos villes et vos spécialités, et vous candidatez une fois sur ce site.',
       },
       {
         question: 'Combien coûte la candidature ?',
         answer: 'Rien. Il n’y a pas de frais de candidature ni d’abonnement. Ce site ne demande pas de carte bancaire.',
       },
       {
-        question: 'Comment fonctionne la commission ?',
+        question: 'Qui peut rejoindre ?',
         answer:
-          'Tripframe garde 20 % de la séance payée par le voyageur. Vous recevez 80 %. Une séance de deux heures à 75 € coûte 150 €. Tripframe garde 30 € et vous recevez 120 €. Le tarif que vous proposez est le prix du voyageur, pas un tarif auquel on ajoute la commission.',
+          'Toute personne avec un peu d’expérience et l’envie de prendre le travail. Pas besoin d’un portfolio célèbre ni d’années à temps plein. Un téléphone, un appareil ou un drone suffit pour candidater. Tripframe examine chaque candidature.',
       },
       {
         question: 'Quand suis-je payé ?',
         answer:
-          'Après une réservation terminée dans l’application. Les réservations et les versements ne sont pas encore ouverts, donc envoyer une candidature ne crée pas de paiement. On n’est pas payé pour candidater.',
+          'La réservation n’est pas encore ouverte, et les tarifs des séances ne sont pas fixés. Envoyer une candidature ne crée pas de paiement. On n’est pas payé pour candidater.',
       },
       {
         question: 'Où a lieu le premier lancement ?',
         answer:
-          'Le premier réseau de photographes est en Israël, à commencer par Tel Aviv, Jérusalem, Haïfa, Eilat et la Galilée. Les séances proposées sont la photo mobile, la photo professionnelle, la photo par drone, et les hôtels et resorts.',
+          'Le premier réseau de photographes est en Israël, à commencer par Tel Aviv, Jérusalem, Haïfa, Eilat et la Galilée. Le travail couvre la photo mobile, professionnelle et par drone pour les voyageurs, ainsi que les hôtels et resorts, les événements sportifs et les événements commerciaux : mariages, conférences, festivals, concerts, lancements de marque et réunions d’entreprise.',
       },
       {
         question: 'Un voyageur peut-il me réserver sur ce site ?',
@@ -205,13 +205,13 @@ export const fr: Copy = {
       {
         question: 'Qui contacter ?',
         answer:
-          'Écrivez à hello@tripframe.com depuis l’adresse de votre candidature et indiquez votre nom. Nous pouvons aider pour une candidature, une acceptation ou une question de rémunération. Il n’y a pas de ligne téléphonique.',
+          'Écrivez à hello@tripframe.com depuis l’adresse de votre candidature et indiquez votre nom. Nous pouvons aider pour une candidature ou une acceptation. Il n’y a pas de ligne téléphonique.',
       },
     ],
     supportEyebrow: 'Assistance',
     supportTitle: 'Contactez-nous, et obtenez l’application à son lancement.',
     supportBody:
-      'Écrivez-nous au sujet d’une candidature, d’une acceptation ou du fonctionnement de la rémunération. Écrivez depuis l’adresse de votre candidature et indiquez votre nom.',
+      'Écrivez-nous au sujet d’une candidature ou d’une acceptation. Écrivez depuis l’adresse de votre candidature et indiquez votre nom.',
     noPhone: 'Il n’y a pas de ligne téléphonique.',
     supportSubject: 'Assistance photographe',
     appsTitle: 'iPhone et Android',
@@ -223,16 +223,14 @@ export const fr: Copy = {
   leads: {
     eyebrow: 'Accès anticipé',
     title: 'Les photographes candidatent ici.',
-    intro: 'Ce site inscrit uniquement des photographes.',
-    payLink: 'Lire les conditions de rémunération',
-    introAfter:
-      'avant de candidater. Les voyageurs trouvent un photographe dans les applications Tripframe pour iPhone et Android. Ces applications sont encore en construction.',
+    intro:
+      'Ce site inscrit uniquement des photographes. Un peu d’expérience et l’envie de travailler suffisent pour candidater. Voyageurs, hôtels et événements trouvent un photographe dans les applications Tripframe pour iPhone et Android. Ces applications sont encore en construction.',
     travelersTitle: 'Pour les voyageurs',
     travelersBody:
       'Trouvez un photographe dans l’application Tripframe. Il n’y a pas d’inscription voyageur sur ce site. Les applications iPhone et Android sont encore en construction, donc les boutons ci-dessous n’ouvrent pas de boutique.',
     formTitle: 'Pour les photographes',
     formBody:
-      'Le nom, l’e-mail, WhatsApp, une ville en Israël et le type de photo sont obligatoires. Tout le reste est facultatif. Chaque candidature est enregistrée en attente.',
+      'Le nom, l’e-mail, WhatsApp, une ville en Israël et le type de photo sont obligatoires. Vous n’avez pas à être photographe à temps plein. Tout le reste est facultatif. Chaque candidature est enregistrée en attente.',
     received: 'Candidature reçue.',
     success: 'Merci, {name}. Votre candidature pour {location} est enregistrée en attente.',
     name: 'Nom',
@@ -321,11 +319,11 @@ export const fr: Copy = {
   },
   footer: {
     blurb:
-      'Les voyageurs trouvent un photographe dans les applications Tripframe. Les photographes candidatent sur ce site. La réservation n’est pas encore ouverte.',
+      'Les familles et les événements trouvent un photographe dans les applications Tripframe. Les photographes candidatent sur ce site. La réservation n’est pas encore ouverte.',
     explore: 'Explorer',
     nav: 'Pied de page',
     whyJoin: 'Pourquoi rejoindre',
-    pay: 'Rémunération et commission',
+    partners: 'Hôtels et événements',
     cities: 'Villes de lancement',
     onboarding: 'Parcours',
     faq: 'FAQ',
@@ -339,7 +337,7 @@ export const fr: Copy = {
     appsLive: 'Téléchargez Tripframe pour iPhone ou Android.',
     appsSoon: 'Les applications iPhone et Android sont encore en construction.',
     legal:
-      '© 2026 Tripframe. Produit en accès anticipé. La réservation n’est pas encore ouverte. Les photographies de cette page viennent d’Unsplash.',
+      '© 2026 Tripframe. Produit en accès anticipé. La réservation n’est pas encore ouverte. Certaines photographies de cette page viennent d’Unsplash.',
   },
   errors: {
     'Enter your name.': 'Indiquez votre nom.',

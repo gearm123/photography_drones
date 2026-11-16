@@ -6,6 +6,8 @@ const images = {
   professional: '/images/service-professional.webp',
   drone: '/images/service-drone.webp',
   hotels: '/images/service-hotel.webp',
+  sports: '/images/service-sports.webp',
+  events: '/images/service-events.webp',
 } as const
 
 export function Services() {
@@ -15,6 +17,8 @@ export function Services() {
     ['professional', images.professional],
     ['drone', images.drone],
     ['hotels', images.hotels],
+    ['sports', images.sports],
+    ['events', images.events],
   ] as const
 
   return (
@@ -23,7 +27,7 @@ export function Services() {
         <Eyebrow>{t.services.eyebrow}</Eyebrow>
         <h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">{t.services.title}</h2>
         <p className="mt-5 max-w-2xl text-muted">{t.services.intro}</p>
-        <ul className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <ul className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {items.map(([key, image]) => {
             const service = t.services.items[key]
             return (

@@ -7,7 +7,6 @@ import {
   equipmentOptions,
   experienceOptions,
   israelCities,
-  rateOptions,
   type IsraelCity,
 } from '../lib/photographerChoices.ts'
 import { AppDownloads } from './AppDownloads.tsx'
@@ -103,13 +102,7 @@ export function LeadForms() {
       <Reveal className="mx-auto max-w-6xl">
         <Eyebrow>{t.leads.eyebrow}</Eyebrow>
         <h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl">{t.leads.title}</h2>
-        <p className="mt-5 max-w-2xl text-muted">
-          {t.leads.intro}{' '}
-          <a href="#pay" className="underline decoration-line underline-offset-4 hover:text-ink">
-            {t.leads.payLink}
-          </a>{' '}
-          {t.leads.introAfter}
-        </p>
+        <p className="mt-5 max-w-2xl text-muted">{t.leads.intro}</p>
         <div className="mt-12 grid items-start gap-6 lg:grid-cols-2">
           <TravelerApps />
           <PhotographerForm />
@@ -145,7 +138,6 @@ function PhotographerForm() {
   const [experience, setExperience] = useState('')
   const [availability, setAvailability] = useState('')
   const [workingAreas, setWorkingAreas] = useState<string[]>([])
-  const [hourlyRate, setHourlyRate] = useState('')
   const [specialties, setSpecialties] = useState<string[]>([])
   const [portfolio, setPortfolio] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
@@ -174,8 +166,8 @@ function PhotographerForm() {
       experience,
       availability,
       workingAreas: workingAreas.join(', '),
-      hourlyRate,
-      currency: hourlyRate ? 'ILS' : '',
+      hourlyRate: '',
+      currency: '',
       specialties,
       portfolios: [portfolio],
     })
@@ -427,16 +419,6 @@ function PhotographerForm() {
               {availabilityOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {t.leads.availabilityOptions[option.value]}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field id={`${formId}-rate`} label={t.leads.rate} error={show(lead.fieldErrors.hourlyRate)} errorClassName={errorTone}>
-            <select id={`${formId}-rate`} name="hourlyRate" value={hourlyRate} onChange={(event) => setHourlyRate(event.target.value)} className={fieldClass}>
-              <option value="">{t.leads.skip}</option>
-              {rateOptions.map((amount) => (
-                <option key={amount} value={String(amount)}>
-                  ₪{amount}
                 </option>
               ))}
             </select>
