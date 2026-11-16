@@ -24,16 +24,16 @@ export function Hero() {
           <AppDownloads />
         </div>
       </div>
-      <div className="order-1 relative min-h-[46vh] lg:order-2 lg:min-h-full">
+      <div className="order-1 relative min-h-[52vh] lg:order-2 lg:min-h-full">
         <img
-          src="/images/hero-900.webp"
-          srcSet="/images/hero-900.webp 900w, /images/hero-1800.webp 1800w"
+          src="/images/hero-family-900.webp"
+          srcSet="/images/hero-family-900.webp 900w, /images/hero-family-1800.webp 1800w"
           sizes="(min-width: 1024px) 50vw, 100vw"
           width={1800}
           height={1200}
           alt={t.hero.imageAlt}
           decoding="async"
-          className="h-full w-full object-cover object-[center_42%]"
+          className="absolute inset-0 h-full w-full object-cover object-[center_38%]"
         />
       </div>
     </section>

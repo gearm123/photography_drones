@@ -14,9 +14,9 @@ async function cover(input, width, height, file, position = 'attention') {
   console.log(file, width, height)
 }
 
-await cover('tmp-images/family.jpg', 1800, 1200, 'hero-1800.webp', 'attention')
-await cover('tmp-images/family.jpg', 900, 600, 'hero-900.webp', 'attention')
-await cover('tmp-images/family.jpg', 1200, 630, 'og.webp', 'attention')
+await cover('tmp-images/family.jpg', 1800, 1200, 'hero-family-1800.webp', 'attention')
+await cover('tmp-images/family.jpg', 900, 600, 'hero-family-900.webp', 'attention')
+await cover('tmp-images/family.jpg', 1200, 630, 'og-family.webp', 'attention')
 await cover('tmp-images/candid.jpg', 900, 1125, 'service-mobile.webp')
 await cover('tmp-images/professional.jpg', 900, 1125, 'service-professional.webp', 'centre')
 await cover('tmp-images/aerial.jpg', 900, 1125, 'service-drone.webp', 'centre')

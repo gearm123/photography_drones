@@ -11,7 +11,7 @@ function jsonScript(data: unknown): string {
 function homeHead(locale: Locale): string {
   const t = translations[locale]
   const url = localeUrl(locale)
-  const image = `${SITE_ORIGIN}/images/og.webp`
+  const image = `${SITE_ORIGIN}/images/og-family.webp`
   const alternates = INDEXABLE_LOCALES.filter((code) => code !== locale)
     .map((code) => `    <meta property="og:locale:alternate" content="${ogLocale(code)}" />`)
     .join('\n')

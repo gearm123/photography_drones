@@ -29,7 +29,7 @@ export function homeStructuredData(locale: Locale) {
           '@type': 'ImageObject',
           url: `${SITE_ORIGIN}/favicon.svg`,
         },
-        image: `${SITE_ORIGIN}/images/og.webp`,
+        image: `${SITE_ORIGIN}/images/og-family.webp`,
         description: t.meta.description,
         areaServed: CITIES,
         contactPoint: {
@@ -59,7 +59,7 @@ export function homeStructuredData(locale: Locale) {
         about: { '@id': organizationId },
         primaryImageOfPage: {
           '@type': 'ImageObject',
-          url: `${SITE_ORIGIN}/images/og.webp`,
+          url: `${SITE_ORIGIN}/images/og-family.webp`,
           width: 1200,
           height: 630,
           caption: t.hero.imageAlt,
