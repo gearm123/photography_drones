@@ -30,6 +30,11 @@
   status = 301
 
 [[redirects]]
+  from = "/th"
+  to = "/th/"
+  status = 301
+
+[[redirects]]
   from = "/privacy"
   to = "/privacy/"
   status = 301

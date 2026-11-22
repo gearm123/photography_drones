@@ -42,7 +42,7 @@ if (!visible.includes('Photographer questions.') || !visible.includes('hello@tri
 if (visible.includes('Get Early Access') || visible.includes('id="travelers"')) {
   throw new Error('Prerendered HTML still includes the traveler signup form')
 }
-if (!visible.includes('Language selection') || !visible.includes('>EN<') || !visible.includes('href="/he/"') || !visible.includes('href="/fr/"') || !visible.includes('href="/ru/"')) {
+if (!visible.includes('Language selection') || !visible.includes('>EN<') || !visible.includes('href="/he/"') || !visible.includes('href="/fr/"') || !visible.includes('href="/ru/"') || !visible.includes('href="/th/"')) {
   throw new Error('Prerendered HTML is missing the language links')
 }
 if (!visible.includes('rel="canonical" href="https://tripframe.netlify.app/"') || !visible.includes('"@type":"FAQPage"') || !visible.includes('hreflang="x-default"')) {
@@ -51,7 +51,7 @@ if (!visible.includes('rel="canonical" href="https://tripframe.netlify.app/"') |
 
 writeFileSync(distIndex, english)
 
-for (const locale of ['he', 'fr', 'ru']) {
+for (const locale of ['he', 'fr', 'ru', 'th']) {
   const html = page(locale)
   if (!html.includes(`lang="${locale}"`) || !html.includes('"@type":"FAQPage"') || !html.includes(`hreflang="${locale}"`)) {
     throw new Error(`Prerendered ${locale} page is missing search metadata`)
@@ -78,6 +78,7 @@ for (const url of [
   'https://tripframe.netlify.app/he/',
   'https://tripframe.netlify.app/fr/',
   'https://tripframe.netlify.app/ru/',
+  'https://tripframe.netlify.app/th/',
   'https://tripframe.netlify.app/privacy/',
 ]) {
   if (!sitemap.includes(`<loc>${url}</loc>`)) throw new Error(`Sitemap is missing ${url}`)

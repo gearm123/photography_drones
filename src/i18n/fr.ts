@@ -12,6 +12,7 @@ export const fr: Copy = {
     he: 'Afficher le site en hébreu',
     fr: 'Afficher le site en français',
     ru: 'Afficher le site en russe',
+    th: 'Afficher le site en thaï',
   },
   skip: 'Aller au contenu',
   banner:

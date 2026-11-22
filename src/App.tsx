@@ -18,7 +18,7 @@ export default function App() {
       <a href="#main" className="skip-link">
         {t.skip}
       </a>
-      <p className="header-safe bg-ink py-2 text-center text-sm text-foam">
+      <p className="bg-ink px-4 pt-12 pb-3 text-center text-sm text-foam sm:px-8 sm:py-2 sm:pe-56 sm:ps-8">
         {t.banner}
       </p>
       <Header />

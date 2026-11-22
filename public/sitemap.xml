@@ -2,38 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://tripframe.netlify.app/</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tripframe.netlify.app/"/>
     <xhtml:link rel="alternate" hreflang="he" href="https://tripframe.netlify.app/he/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://tripframe.netlify.app/fr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://tripframe.netlify.app/ru/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://tripframe.netlify.app/th/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tripframe.netlify.app/"/>
   </url>
   <url>
     <loc>https://tripframe.netlify.app/he/</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tripframe.netlify.app/"/>
     <xhtml:link rel="alternate" hreflang="he" href="https://tripframe.netlify.app/he/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://tripframe.netlify.app/fr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://tripframe.netlify.app/ru/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://tripframe.netlify.app/th/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tripframe.netlify.app/"/>
   </url>
   <url>
     <loc>https://tripframe.netlify.app/fr/</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tripframe.netlify.app/"/>
     <xhtml:link rel="alternate" hreflang="he" href="https://tripframe.netlify.app/he/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://tripframe.netlify.app/fr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://tripframe.netlify.app/ru/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://tripframe.netlify.app/th/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tripframe.netlify.app/"/>
   </url>
   <url>
     <loc>https://tripframe.netlify.app/ru/</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tripframe.netlify.app/"/>
     <xhtml:link rel="alternate" hreflang="he" href="https://tripframe.netlify.app/he/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://tripframe.netlify.app/fr/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://tripframe.netlify.app/ru/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://tripframe.netlify.app/th/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tripframe.netlify.app/"/>
+  </url>
+  <url>
+    <loc>https://tripframe.netlify.app/th/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tripframe.netlify.app/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://tripframe.netlify.app/he/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://tripframe.netlify.app/fr/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tripframe.netlify.app/ru/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://tripframe.netlify.app/th/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tripframe.netlify.app/"/>
   </url>
   <url>

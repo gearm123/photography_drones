@@ -10,6 +10,7 @@ export const en = {
     he: 'Switch site language to Hebrew',
     fr: 'Switch site language to French',
     ru: 'Switch site language to Russian',
+    th: 'Switch site language to Thai',
   },
   skip: 'Skip to content',
   banner:

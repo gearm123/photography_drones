@@ -130,24 +130,41 @@ html[lang='ru'] .font-display {
   line-height: 1.15;
 }
 
+html[lang='th'] {
+  --font-sans: "Noto Sans Thai", "Outfit", "Segoe UI", sans-serif;
+  --font-display: "Noto Sans Thai", "Outfit", sans-serif;
+}
+
+html[lang='th'] body {
+  line-height: 1.75;
+}
+
+html[lang='th'] h1,
+html[lang='th'] h2,
+html[lang='th'] h3,
+html[lang='th'] .font-display {
+  font-family: "Noto Sans Thai", var(--font-sans);
+  line-height: 1.35;
+}
+
 .header-safe {
   padding-inline-start: 1.25rem;
-  padding-inline-end: 7.75rem;
+  padding-inline-end: 9.4rem;
 }
 
 html[dir='rtl'] .header-safe {
-  padding-inline-start: 7.75rem;
+    padding-inline-start: 9.4rem;
   padding-inline-end: 1.25rem;
 }
 
 @media (min-width: 640px) {
   .header-safe {
     padding-inline-start: 2rem;
-    padding-inline-end: 10.5rem;
+    padding-inline-end: 12.6rem;
   }
 
   html[dir='rtl'] .header-safe {
-    padding-inline-start: 10.5rem;
+    padding-inline-start: 12.6rem;
     padding-inline-end: 2rem;
   }
 }
@@ -163,9 +180,9 @@ html[dir='rtl'] .header-safe {
 .lang-toggle__track {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   align-items: center;
-  width: 6.4rem;
+  width: 8.6rem;
   height: 1.7rem;
   padding: 0.2rem;
   border-radius: 999px;
@@ -178,8 +195,8 @@ html[dir='rtl'] .header-safe {
 .lang-toggle__thumb {
   position: absolute;
   top: 0.2rem;
-  left: calc(0.2rem + var(--lang-index, 0) * 25%);
-  width: calc(25% - 0.25rem);
+  left: calc(0.2rem + var(--lang-index, 0) * 20%);
+  width: calc(20% - 0.22rem);
   height: calc(100% - 0.4rem);
   border-radius: 999px;
   background: var(--color-sea);
@@ -219,7 +236,7 @@ html[dir='rtl'] .header-safe {
   }
 
   .lang-toggle__track {
-    width: 8.5rem;
+    width: 11.2rem;
     height: 1.85rem;
   }
 

@@ -6,13 +6,14 @@ export const SITE_ORIGIN = 'https://tripframe.netlify.app'
 export const SITE_NAME = 'Tripframe'
 export const SUPPORT_EMAIL = 'hello@tripframe.com'
 
-export const INDEXABLE_LOCALES = ['en', 'he', 'fr', 'ru'] as const satisfies readonly Locale[]
+export const INDEXABLE_LOCALES = ['en', 'he', 'fr', 'ru', 'th'] as const satisfies readonly Locale[]
 
 const OG_LOCALE: Record<Locale, string> = {
   en: 'en_US',
   he: 'he_IL',
   fr: 'fr_FR',
   ru: 'ru_RU',
+  th: 'th_TH',
 }
 
 export function localePath(locale: Locale): string {
@@ -25,7 +26,7 @@ export function localeUrl(locale: Locale): string {
 
 export function localeFromPath(pathname: string): Locale {
   const path = pathname.replace(/\/+$/, '') || '/'
-  if (path === '/he' || path === '/fr' || path === '/ru') return path.slice(1) as Locale
+  if (path === '/he' || path === '/fr' || path === '/ru' || path === '/th') return path.slice(1) as Locale
   return 'en'
 }
 
