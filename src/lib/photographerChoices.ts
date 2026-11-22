@@ -34,6 +34,41 @@ export const israelCities = [
 
 export type IsraelCity = (typeof israelCities)[number]
 
+/** Koh Samui is first because that is the launch. */
+export const thailandPlaces = [
+  'Koh Samui',
+  'Chaweng',
+  'Lamai',
+  'Bophut',
+  'Maenam',
+  'Choeng Mon',
+  'Koh Phangan',
+  'Koh Tao',
+  'Surat Thani',
+  'Bangkok',
+  'Phuket',
+  'Krabi',
+  'Koh Phi Phi',
+  'Koh Lanta',
+  'Pattaya',
+  'Hua Hin',
+  'Chiang Mai',
+  'Chiang Rai',
+  'Ayutthaya',
+  'Kanchanaburi',
+] as const
+
+export type ThailandPlace = (typeof thailandPlaces)[number]
+
+export const placeGroups = [
+  { country: 'thailand' as const, places: thailandPlaces },
+  { country: 'israel' as const, places: israelCities },
+]
+
+export function isWorkPlace(value: string): boolean {
+  return (thailandPlaces as readonly string[]).includes(value) || (israelCities as readonly string[]).includes(value)
+}
+
 export const equipmentOptions = [
   { value: 'phone', label: 'Phone' },
   { value: 'camera', label: 'Camera' },

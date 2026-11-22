@@ -3,9 +3,11 @@ import type { Locale } from '../i18n/types.ts'
 import { SITE_NAME, SITE_ORIGIN, SUPPORT_EMAIL, localeUrl } from './site.ts'
 
 const CITIES = [
+  { '@type': 'City', name: 'Koh Samui', addressCountry: 'TH' },
+  { '@type': 'City', name: 'Bangkok', addressCountry: 'TH' },
+  { '@type': 'City', name: 'Phuket', addressCountry: 'TH' },
   { '@type': 'City', name: 'Tel Aviv', addressCountry: 'IL' },
   { '@type': 'City', name: 'Jerusalem', addressCountry: 'IL' },
-  { '@type': 'City', name: 'Haifa', addressCountry: 'IL' },
 ] as const
 
 const organizationId = `${SITE_ORIGIN}/#organization`
@@ -36,7 +38,7 @@ export function homeStructuredData(locale: Locale) {
           '@type': 'ContactPoint',
           email: SUPPORT_EMAIL,
           contactType: 'customer support',
-          availableLanguage: ['English', 'Hebrew', 'French', 'Russian'],
+          availableLanguage: ['English', 'Thai', 'Hebrew', 'French', 'Russian'],
         },
       },
       {

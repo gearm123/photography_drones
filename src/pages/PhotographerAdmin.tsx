@@ -5,8 +5,8 @@ import {
   choiceLabel,
   equipmentOptions,
   experienceOptions,
-  israelCities,
-  isIsraelCity,
+  isWorkPlace,
+  placeGroups,
   rateOptions,
 } from '../lib/photographerChoices.ts'
 import type { PhotographerRecord } from '../lib/photographerRecord.ts'
@@ -379,13 +379,13 @@ function EditForm({
     lead.workingAreas
       .split(',')
       .map((part) => part.trim())
-      .filter(isIsraelCity),
+      .filter(isWorkPlace),
   )
   const [legacyAreas] = useState(() => {
     const known = lead.workingAreas
       .split(',')
       .map((part) => part.trim())
-      .filter(isIsraelCity)
+      .filter(isWorkPlace)
     return known.length === 0 ? lead.workingAreas.trim() : ''
   })
   const [equipment, setEquipment] = useState(lead.equipment)
@@ -469,17 +469,19 @@ function EditForm({
         <EditorField label="WhatsApp" error={fields.phone || serverFields.phone}>
           <input className={fieldClass} value={phone} onChange={(event) => setPhone(event.target.value)} required />
         </EditorField>
-        <EditorField label="City in Israel" error={fields.location}>
+        <EditorField label="Where you work" error={fields.location}>
           <select className={fieldClass} value={location} onChange={(event) => setLocation(event.target.value)} required>
-            <option value="">Choose a city</option>
-            {withCurrent(
-              israelCities.map((city) => ({ value: city, label: city })),
-              location,
-            ).map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
+            <option value="">Choose a place</option>
+            {placeGroups.map((group) => (
+              <optgroup key={group.country} label={group.country === 'thailand' ? 'Thailand' : 'Israel'}>
+                {group.places.map((place) => (
+                  <option key={place} value={place}>
+                    {place}
+                  </option>
+                ))}
+              </optgroup>
             ))}
+            {location && !isWorkPlace(location) ? <option value={location}>{location}</option> : null}
           </select>
         </EditorField>
         <div className="sm:col-span-2">
@@ -487,7 +489,7 @@ function EditForm({
             <legend className="text-sm font-medium">Also available in (optional)</legend>
             {legacyAreas ? <p className="mt-2 text-sm font-normal text-muted">Saved note: {legacyAreas}</p> : null}
             <div className="mt-2 grid max-h-56 gap-2 overflow-y-auto sm:grid-cols-2">
-              {israelCities.map((city) => (
+              {placeGroups.flatMap((group) => group.places).map((city) => (
                 <label key={city} className="flex min-h-11 items-center gap-3 rounded-2xl border border-line px-3 text-sm font-normal">
                   <input
                     type="checkbox"

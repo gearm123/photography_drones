@@ -33,7 +33,7 @@ if (!visible.includes('Your Trip Deserves More Than Selfies.')) {
 if (!visible.includes('Join Our Photographer Network') || !visible.includes('App Store') || !visible.includes('Google Play')) {
   throw new Error('Prerendered HTML is missing the photographer form or the app downloads')
 }
-if (!visible.includes('Why photographers join Tripframe.') || !visible.includes('Experience is enough') || !visible.includes('Tel Aviv')) {
+if (!visible.includes('Why photographers join Tripframe.') || !visible.includes('Experience is enough') || !visible.includes('Koh Samui')) {
   throw new Error('Prerendered HTML is missing the photographer program')
 }
 if (!visible.includes('Photographer questions.') || !visible.includes('hello@tripframe.com')) {

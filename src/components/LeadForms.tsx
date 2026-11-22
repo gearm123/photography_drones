@@ -6,8 +6,7 @@ import {
   availabilityOptions,
   equipmentOptions,
   experienceOptions,
-  israelCities,
-  type IsraelCity,
+  placeGroups,
 } from '../lib/photographerChoices.ts'
 import { AppDownloads } from './AppDownloads.tsx'
 import { Eyebrow, Reveal } from './Reveal.tsx'
@@ -234,7 +233,7 @@ function PhotographerForm() {
   const problems = Object.entries(lead.fieldErrors).flatMap(([key, message]) =>
     message ? [{ key, label: fieldLabel(key), message: show(message) ?? message }] : [],
   )
-  const cityName = (value: string) => (value in t.leads.cityNames ? t.leads.cityNames[value as IsraelCity] : value)
+  const cityName = (value: string) => (value in t.leads.cityNames ? t.leads.cityNames[value as keyof typeof t.leads.cityNames] : value)
   const thanks = fill(t.leads.success, { name: name.trim(), location: cityName(location) })
 
   return (
@@ -329,10 +328,14 @@ function PhotographerForm() {
               required
             >
               <option value="">{t.leads.chooseCity}</option>
-              {israelCities.map((city) => (
-                <option key={city} value={city}>
-                  {cityName(city)}
-                </option>
+              {placeGroups.map((group) => (
+                <optgroup key={group.country} label={t.leads.countries[group.country]}>
+                  {group.places.map((place) => (
+                    <option key={place} value={place}>
+                      {cityName(place)}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </Field>
@@ -372,19 +375,26 @@ function PhotographerForm() {
           <fieldset aria-describedby={lead.fieldErrors.workingAreas ? `${formId}-areas-error` : undefined}>
             <legend className="text-sm font-medium">{t.leads.areas}</legend>
             <p className={`mt-1 text-sm ${quiet}`}>{t.leads.areasHint}</p>
-            <div className="mt-2 grid max-h-56 gap-2 overflow-y-auto sm:grid-cols-2">
-              {israelCities.map((city) => (
-                <label key={city} className="flex min-h-11 items-center gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm">
-                  <input
-                    type="checkbox"
-                    name="workingAreas"
-                    value={city}
-                    checked={workingAreas.includes(city)}
-                    onChange={() => toggleArea(city)}
-                    className="size-4 accent-sea"
-                  />
-                  {cityName(city)}
-                </label>
+            <div className="mt-2 max-h-64 space-y-4 overflow-y-auto">
+              {placeGroups.map((group) => (
+                <div key={group.country}>
+                  <p className="text-sm font-medium">{t.leads.countries[group.country]}</p>
+                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                    {group.places.map((place) => (
+                      <label key={place} className="flex min-h-11 items-center gap-3 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm">
+                        <input
+                          type="checkbox"
+                          name="workingAreas"
+                          value={place}
+                          checked={workingAreas.includes(place)}
+                          onChange={() => toggleArea(place)}
+                          className="size-4 accent-sea"
+                        />
+                        {cityName(place)}
+                      </label>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
             {lead.fieldErrors.workingAreas ? (

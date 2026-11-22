@@ -1,6 +1,6 @@
 export const supportEmail = 'hello@tripframe.com'
 
-export const launchLocations = ['Tel Aviv', 'Jerusalem', 'Haifa', 'Eilat', 'Galilee'] as const
+export const launchLocations = ['Koh Samui', 'Koh Phangan', 'Koh Tao', 'Bangkok', 'Phuket'] as const
 
 export const appStores = [
   { name: 'App Store', detail: 'Download for iPhone', href: '' },

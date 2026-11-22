@@ -89,13 +89,15 @@ function checkPlace(value: string, emptyMessage: string): { error?: string; valu
 export function normalizePhone(value: string): { error?: string; value: string } {
   let compact = value.trim().replace(/[\s().-]/g, '')
   if (compact.startsWith('00')) compact = `+${compact.slice(2)}`
+  if (/^0[689]\d{8}$/.test(compact)) compact = `+66${compact.slice(1)}`
+  if (/^66\d{8,9}$/.test(compact)) compact = `+${compact}`
   if (/^0[2-9]\d{7,8}$/.test(compact)) compact = `+972${compact.slice(1)}`
   if (/^5\d{8}$/.test(compact)) compact = `+972${compact}`
   if (/^972\d{8,9}$/.test(compact)) compact = `+${compact}`
   if (/^\+[1-9]\d{7,14}$/.test(compact)) return { value: compact }
   const loose = compact.replace(/[^\d+]/g, '')
   if (loose.length >= 9 && loose.length <= 16) return { value: loose }
-  return { error: 'Enter a WhatsApp number, like +972 50 123 4567.', value: '' }
+  return { error: 'Enter a WhatsApp number, like +66 81 234 5678 or +972 50 123 4567.', value: '' }
 }
 
 function checkRate(value: string): { cents: number | null } {
@@ -209,7 +211,7 @@ function keepOptional(value: string, max: number): string | null {
 function checkCity(value: string): { error?: string; value: string } {
   const city = clipText(value, 120)
   if (city.length >= 2) return { value: city }
-  return { error: 'Choose a city in Israel.', value: '' }
+  return { error: 'Choose a place in Thailand or Israel.', value: '' }
 }
 
 function checkWorkingAreas(value: string, location: string): { value: string } {
